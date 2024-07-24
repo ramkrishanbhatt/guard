@@ -5,7 +5,7 @@ import UploadVideo from "./components/UploadVideo";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
 import ListResults from "./components/ListResults";
 import Review from "./components/Review";
-import Logo from "./assets/Sutherland_idAvkZdSwO_0.png";
+import Logo from "./Sutherland_idAvkZdSwO_0.png";
 import { Home, Person } from "@mui/icons-material";
 import QueueDetails from "./components/QueueDetails";
 
