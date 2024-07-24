@@ -1,3 +1,4 @@
 /data/
-/guard-api/uploaded_files/*
+guard-api/uploaded_files/*
 __pycache__
+guard-ui/node_modules/*
