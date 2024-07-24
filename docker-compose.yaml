@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: ./guard-api/Dockerfile
     volumes:
-      - ./:/code/:ro
+      - ./:/code/
     ports:
       - 8000:8000
     depends_on:

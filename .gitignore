@@ -1,1 +1,3 @@
 /data/
+/guard-api/uploaded_files/*
+__pycache__

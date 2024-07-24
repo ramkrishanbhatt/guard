@@ -11,6 +11,8 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 # 
 COPY ./ /code/
+RUN export PYTHONPATH="$PYTHONPATH:/code/guard-api/"
+RUN chmod 777 /code/guard-api/uploaded_files/videos
 
 # 
 # CMD ["fastapi", "run", "app/main.py", "--port", "80"]
