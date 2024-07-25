@@ -59,9 +59,9 @@ const Frames: React.FC = () => {
   return (
     <Box
       width={"100%"}
-      p={1}
-      border={"1px solid black"}
-      mt={1}
+      //p={1}
+      //border={"1px solid black"}
+      //mt={1}
       ml={1}
       height={"60vh"}
 			display={"flex"}
@@ -71,8 +71,8 @@ const Frames: React.FC = () => {
         ref={playerRef}
         url={videoUrl}
         controls={true}
-        width="50%"
-        height="auto"
+        width="60%"//change
+        height="300px"//change
         config={{ file: { attributes: { crossOrigin: "anonymous" } } }}
       />
       <canvas
@@ -86,13 +86,13 @@ const Frames: React.FC = () => {
         flexWrap={"wrap"}
         direction={"row"}
         width={"50%"}
-        spacing={1}
+        spacing={50}
       >
-        <div>
+        <Box padding={.5} marginRight={1}>{/* change */}
           {frames.map((frame, index) => (
             <img key={index} src={frame} alt={`Frame ${index}`} />
           ))}
-        </div>
+        </Box>
       </Stack>
     </Box>
   );
