@@ -11,23 +11,23 @@ export const StyledBoxDisplay = styled(Box)({
   export const StyledBoxTools = styled(Box)({
     backgroundColor: "#F1F0F0",
     justifyContent: "center",
-    width: "300px"
+    width: "310px"
   })
 
   export const StyledBoxScore = styled(Box)({
-    height: "80px",
+    height: "30px",
     borderRadius: "25px",
     justifyContent: "center"
   })
 
   export const StyledBoxCommentDialog = styled(Box)({
     backgroundColor: "#D6DCE5",
-    width: "300px"
+    width: "310px"
   })
 
   export const StyledBoxComment = styled(Box)({
     backgroundColor: "#D5E4F1",
     justifyContent: "center",
-    width: "300px",
+    width: "310px",
     height: "100px"
   })
