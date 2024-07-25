@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Stack, TextField, Typography, Button, Grid } from "@mui/material";
 import {StyledBoxComment, StyledBoxCommentDialog, StyledBoxDisplay, StyledBoxScore, StyledBoxTools} from "./components.Style"
+import Frames from "./Frames";
 
 const Review = ({ data, onClick }: { data: any; onClick: any }) => {
   return (
@@ -16,8 +17,9 @@ const Review = ({ data, onClick }: { data: any; onClick: any }) => {
       <Grid
         container
         rowSpacing={3}>
-        <Grid item xs={6} m={1.5} bgcolor={"lightblue"} height={"450px"}>
-          <Stack>
+        <Grid item xs={6} m={1.5} height={"450px"}>
+            <Frames />
+          {/* <Stack>
             <Button onClick={onClick}>Close</Button>
             <div>
               <video
@@ -28,7 +30,7 @@ const Review = ({ data, onClick }: { data: any; onClick: any }) => {
                 src={""}
               ></video>
             </div>
-          </Stack>
+          </Stack> */}
         </Grid>
         <Grid item xs={2.9}>
           <Grid container>
