@@ -4,72 +4,82 @@ import {StyledBoxComment, StyledBoxCommentDialog, StyledBoxDisplay, StyledBoxSco
 import Frames from "./Frames";
 
 const Review = ({ data, onClick }: { data: any; onClick: any }) => {
+
+  const countTime = [
+    {text: "Processed Count", val: "451"},
+    {text: "Review Time", val: "4:23:52"}
+    ];
+
+  const textInAiDetection = [
+    {text: "Text 1", color: "#A9D18E"},
+    {text: "Text 2", color: "#F4AB83"},
+    {text: "Text 3", color: "#D6DCE5"},
+  ];
+
+  const qualityTools = [
+    {text: "RESOLUTION:", val: "XXX"},
+    {text: "AUDIO QUALITY:", val: "XXX"},
+    {text: "XXX:", val: "XXX"}
+  ];
+
+  const notes = [
+    {text: "Notes"},
+    {text: "Annotations"},
+    //{text: "Transfer"},
+  ]
   return (
     <Stack>
-      <Box sx={{display: "flex", justifyContent: 'flex-end',}}>
-        <StyledBoxDisplay m={2} p={2}>
-          <Typography color={"#002060"} alignItems={"center"}>Processed Count 451</Typography>
+      <Box sx={{display: "flex", justifyContent: 'flex-end'}}>
+        {countTime.map((_) => (
+          <StyledBoxDisplay m={2} p={2} color={"#002060"} fontWeight={400}>
+            {`${_.text} ${_.val}`}
         </StyledBoxDisplay>
-        <StyledBoxDisplay m={2} p={2}>
-          <Typography color={"#002060"} alignItems={"center"}>Review Time 4:23:52</Typography>
-        </StyledBoxDisplay>
+        ))}
       </Box>
       <Grid
         container
         rowSpacing={3}>
-        <Grid item xs={6} m={1.5} height={"450px"}>
-            <Frames />
-          {/* <Stack>
+        <Grid item xs={6} m={1.5} bgcolor={"lightblue"} height={"435px"}>
+          <Stack>
             <Button onClick={onClick}>Close</Button>
-            <div>
-              <video
-                controls
-                width="100%"
-                height={"400px"}
-                className="videoPlayer"
-                src={""}
-              ></video>
-            </div>
-          </Stack> */}
+              <Frames />
+            </Stack>
         </Grid>
         <Grid item xs={2.9}>
           <Grid container>
             <Grid item justifyContent={"center"}>
-              <StyledBoxTools m={"20px"} p={"20px"} >
+              <StyledBoxTools m={"15px"} p={"15px"} >
                 <Typography>AI Detection</Typography>
               </StyledBoxTools>  
             </Grid>
-            <Grid item m={"20px"} p={"20px"} bgcolor={"#B2E7FA"} justifyContent={"center"} width={"340px"} height={"300px"}>
-                <StyledBoxScore m={1} bgcolor={"#A9D18E"}>
-                  <Typography justifyContent={"center"}>TEXT 1</Typography>
-                </StyledBoxScore>
-                <StyledBoxScore m={1} bgcolor={"#F4AB83"}>
-                  <Typography justifyContent={"center"}>TEXT 1</Typography>
-                </StyledBoxScore>
-                <StyledBoxScore m={1} bgcolor={"#D6DCE5"}>
-                  <Typography justifyContent={"center"}>TEXT 1</Typography>
-                </StyledBoxScore>
+            <Grid item m={"15px"} p={"15px"} bgcolor={"#B2E7FA"} justifyContent={"center"} width={"500px"} height={"325px"}>
+              {textInAiDetection.map((_)=>(
+                <StyledBoxScore m={"20px"} p={"20px"} bgcolor={_.color} textAlign={"center"}>
+                  {_.text}
+              </StyledBoxScore>
+              ))}
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={2.9}>
-          <StyledBoxTools m={"5px"} p={"5px"} >
-                  <Typography color={"#002060"}>RESOLUTION: XXX</Typography>
-          </StyledBoxTools>  
-          <StyledBoxTools m={"5px"} p={"5px"} >
-                  <Typography color={"#002060"}>AUDIO QUALITY: XXX</Typography>
-          </StyledBoxTools>    
-          <StyledBoxTools m={"5px"} p={"5px"} >
-                  <Typography color={"#002060"}>XXX: XXX</Typography>
-          </StyledBoxTools> 
-          <StyledBoxCommentDialog m={"5px"} p={"5px"} >
-                  <Typography color={"#002060"}>NOTES</Typography>
-          </StyledBoxCommentDialog> 
-          <StyledBoxComment m={"5px"} p={"5px"}>
-          </StyledBoxComment>
+          {qualityTools.map((_)=>(
+            <StyledBoxTools m={"5px"} p={"5px"} color={"#002060"} fontWeight={"450px"}>
+              {`${_.text} ${_.val}`}
+            </StyledBoxTools>
+          ))}
+          {notes.map((_)=>(
+            <>
+            <StyledBoxCommentDialog m={"5px"} p={"5px"} >
+              <Typography color={"#002060"}>{_.text}</Typography>
+            </StyledBoxCommentDialog> 
+            <StyledBoxComment m={"5px"} p={"5px"}>
+            </StyledBoxComment>
+            </>
+          ))}
+          
         </Grid>
       </Grid>
-      <Stack m={2} p={2} bgcolor={"orange"} direction={"row"} spacing={1}>
+      <Stack m={2} p={"15px"} bgcolor={"#DAC4B6"} direction={"row"} spacing={1} borderRadius={"25px"} width={"1000px"}>
         <Stack
           useFlexGap
           flexWrap={"wrap"}
@@ -78,11 +88,11 @@ const Review = ({ data, onClick }: { data: any; onClick: any }) => {
           spacing={"10px"}
         >
           {[1, 2, 3, 4, 5, 6].map((_) => (
-            <Box bgcolor={"gray"} p={1}>Text {_}</Box>
+            <Box bgcolor={"#DCDDDC"} p={1} color={"#1B376F"}>Text {_}</Box>
           ))}
         </Stack>
-        <Button variant="contained">Approve</Button>
-        <Button variant="contained">Reject</Button>
+        <Button sx={{backgroundColor: "#00B0F0", color: "#FFFFFF", padding: "10px", fontWeight: 500, borderRadius: "10px"}}>Approve</Button>
+        <Button sx={{backgroundColor: "#8497B0", color: "#FFFFFF", padding: "10px", fontWeight: 500, borderRadius: "10px"}}>Reject</Button>
       </Stack>
     </Stack>
   );
