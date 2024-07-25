@@ -8,23 +8,29 @@ import {
   IconButton,
   Typography,
   LinearProgress,
-	styled,
+  styled,
 } from "@mui/material";
 import { EditOutlined, StarOutline, Upload } from "@mui/icons-material";
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
   height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
+  overflow: "hidden",
+  position: "absolute",
   bottom: 0,
   left: 0,
-  whiteSpace: 'nowrap',
+  whiteSpace: "nowrap",
   width: 1,
 });
 
-const QueueDetails = ({onClick}:{onClick: any}) => {
+const QueueDetails = ({
+  onClick,
+  classes,
+}: {
+  onClick: any;
+  classes: any[];
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -171,9 +177,9 @@ const QueueDetails = ({onClick}:{onClick: any}) => {
             fontSize={"20px"}
             flexDirection={"column"}
           >
-            <IconButton  component="label" sx={{ alignSelf: "end", p: 0 }}>
+            <IconButton component="label" sx={{ alignSelf: "end", p: 0 }}>
               <Upload />
-							<VisuallyHiddenInput type="file" />
+              <VisuallyHiddenInput type="file" />
             </IconButton>
             <Box p={3}>Add New Queue</Box>
           </Box>
@@ -278,76 +284,90 @@ const QueueDetails = ({onClick}:{onClick: any}) => {
             <Typography width={120}>Queue Volume</Typography>
           </Stack>
         </Grid>
-        <Grid item md={2}>
-          <Box
-            mb={0.5}
-            bgcolor={"#47B9DF"}
-            p={1}
-            color={"darkblue"}
-            fontWeight={600}
-          >
-            {queueData.map((_) => (
-              <Box
-                mb={0.5}
-                bgcolor={"#DADADA"}
-                p={1}
-                color={"darkblue"}
-                fontWeight={600}
-                fontSize={"12px"}
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"space-between"}
-              >
-                {_.text}{" "}
-                <IconButton onClick={onClick} size="small" sx={{ p: 0, height: "8px" }}>
-                  <EditOutlined />
-                </IconButton>
-              </Box>
-            ))}
-          </Box>
-        </Grid>
-        <Grid item md={10}>
-          <Box
-            mb={0.5}
-            bgcolor={"#5296C4"}
-            p={1}
-            color={"darkblue"}
-            fontWeight={600}
-          >
-            {queueData.map((_) => (
-              <Box
-                mb={0.5}
-                bgcolor={"#DADADA"}
-                p={0.37}
-                color={"darkblue"}
-                fontWeight={600}
-                fontSize={"12px"}
-              >
-                <Stack
+        <Grid container spacing={{ md: 0.5 }} height={"50vh"} overflow={"auto"} columns={{ md: 12 }}>
+          <Grid item md={2}>
+            <Box
+              mb={0.5}
+              bgcolor={"#47B9DF"}
+              p={1}
+              color={"darkblue"}
+              fontWeight={600}
+            >
+              {classes.map((_) => (
+                <Box
+                  mb={0.5}
+                  bgcolor={"#DADADA"}
+                  p={0.37}
                   color={"darkblue"}
-                  fontSize={"12px"}
                   fontWeight={600}
-                  direction={"row"}
+                  fontSize={"12px"}
+                  display={"flex"}
+                  flexDirection={"row"}
+                  justifyContent={"space-between"}
                   alignItems={"center"}
                 >
-                  <Box flex={1}>
-                    <Box
-                      height={"10px"}
-                      width={`${_.value * 100}%`}
-                      sx={{
-                        background: "linear-gradient(to right, #9c3, #820F0F)",
-                      }}
-                    ></Box>
-                  </Box>
-                  <Typography fontSize={"6px"} width={100}>
-                    <StarOutline fontSize="small" />
+                  <Typography
+                    textOverflow={"ellipsis"}
+                    whiteSpace={"nowrap"}
+                    overflow={"hidden"}
+                  >
+                    {_.class}{" "}
                   </Typography>
-                  <Typography width={125}>{_.moderators}</Typography>
-                  <Typography width={120}>{_.volume}</Typography>
-                </Stack>
-              </Box>
-            ))}
-          </Box>
+                  <IconButton
+                    onClick={onClick}
+                    size="small"
+                    sx={{ p: 0, height: "8px" }}
+                  >
+                    <EditOutlined />
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+          </Grid>
+          <Grid item md={10}>
+            <Box
+              mb={0.5}
+              bgcolor={"#5296C4"}
+              p={1}
+              color={"darkblue"}
+              fontWeight={600}
+            >
+              {classes.map((_) => (
+                <Box
+                  mb={0.5}
+                  bgcolor={"#DADADA"}
+                  p={0.37}
+                  color={"darkblue"}
+                  fontWeight={600}
+                  fontSize={"12px"}
+                >
+                  <Stack
+                    color={"darkblue"}
+                    fontSize={"12px"}
+                    fontWeight={600}
+                    direction={"row"}
+                    alignItems={"center"}
+                  >
+                    <Box flex={1}>
+                      <Box
+                        height={"10px"}
+                        width={`${_.average_score * 100}%`}
+                        sx={{
+                          background:
+                            "linear-gradient(to right, #9c3, #820F0F)",
+                        }}
+                      ></Box>
+                    </Box>
+                    <Typography fontSize={"6px"} width={100}>
+                      <StarOutline fontSize="small" />
+                    </Typography>
+                    <Typography width={125}>10</Typography>
+                    <Typography width={120}>XXX,XXX</Typography>
+                  </Stack>
+                </Box>
+              ))}
+            </Box>
+          </Grid>
         </Grid>
       </Grid>
       {/* <Stack
