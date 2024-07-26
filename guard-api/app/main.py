@@ -103,19 +103,24 @@ async def classify_videos(tag: str = Query(...)):
             hive_response = video.get("hiveResponse", {})
             frames = extract_frames_with_tag(hive_response, tag)
             
+            video_id = str(video["_id"])
+            if video_id not in video_frames:
+                video_frames[video_id] = []
+            
             for frame in frames:
-                video_id = str(video["_id"])
-                if video_id not in video_frames:
-                    video_frames[video_id] = []
                 video_frames[video_id].append({
                     "time": frame["time"],
                     "score": frame["score"],
                     "bounding_poly": frame["bounding_poly"]
                 })
         
-        return JSONResponse(content=video_frames)
+        # Convert the dictionary to a list of dictionaries
+        video_frames_list = [{"video_id": vid, "frames": frames} for vid, frames in video_frames.items()]
+        
+        return JSONResponse(content=video_frames_list)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
     
 @app.post("/update-decision/")
 async def update_decision(video_id: str, decision: str):
@@ -152,6 +157,22 @@ async def get_processed_data():
         processed_data_list = [serialize_document(doc) for doc in processed_data_list]
         
         return JSONResponse(content=processed_data_list)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/get-processed-data/{id}")
+async def get_processed_data(id: str):
+    try:
+        # Fetch the document with the given ID
+        document = await collection.find_one({"_id": ObjectId(id)})
+        
+        if document is None:
+            raise HTTPException(status_code=404, detail="Document not found")
+        
+        # Convert ObjectId to string
+        document["_id"] = str(document["_id"])
+        
+        return JSONResponse(content=document)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
