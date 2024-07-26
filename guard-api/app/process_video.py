@@ -2,7 +2,7 @@ import httpx
 
 # Hive API details
 HIVE_API_URL = "https://api.thehive.ai/api/v2/task/sync"
-HIVE_API_TOKEN = "AvDdDrOwqrmnP1T5E6tJsHwjrA9qDeth"
+HIVE_API_TOKEN = "rvi3tYbKFoj7Ww5aTnPTNpCE29wXQQVJ"
 
 async def process_video(file):
     # Prepare file data
