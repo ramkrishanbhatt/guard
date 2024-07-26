@@ -125,7 +125,6 @@ async def classify_videos(tag: str = Query(...)):
 @app.post("/update-decision/")
 async def update_decision(video_id: str, decision: str):
     try:
-        # Assuming you have a MongoDB collection named 'process_video_decision'
         # Update the decision for the specified video ID
         update_result = await collection.update_one(
             {"_id": ObjectId(video_id)},
@@ -133,7 +132,14 @@ async def update_decision(video_id: str, decision: str):
         )
         
         if update_result.modified_count > 0:
-            return {"message": f"Decision updated for video ID: {video_id}"}
+            # Fetch the updated document
+            updated_document = await collection.find_one({"_id": ObjectId(video_id)})
+            if updated_document:
+                # Convert ObjectId to string
+                updated_document["_id"] = str(updated_document["_id"])
+                return JSONResponse(content=updated_document)
+            else:
+                raise HTTPException(status_code=404, detail="Document not found after update")
         else:
             return {"message": f"No matching video ID found: {video_id}"}
     except Exception as e:
