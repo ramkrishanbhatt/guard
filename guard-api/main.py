@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 from process_video import process_video
 from fastapi.responses import JSONResponse
 
-# Load environment variables from .env file
+# Load environment variables from .env filessss
 load_dotenv()
 
 VIDEO_STORAGE_PATH = os.getenv("VIDEO_STORAGE_PATH")
