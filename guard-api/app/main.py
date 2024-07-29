@@ -8,7 +8,7 @@ from app.database import db, collection
 from app.storage.video_storage import save_video, get_video_url
 from dotenv import load_dotenv
 from fastapi.responses import JSONResponse
-from .process_video import process_video, filter_data
+from .process_video import process_video
 from bson import ObjectId
 
 # Load environment variables from .env file
