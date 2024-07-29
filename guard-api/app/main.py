@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 from fastapi.responses import JSONResponse
 from .process_video import process_video
 from bson import ObjectId
+from pydantic import BaseModel
+from typing import List
 
 # Load environment variables from .env file
 load_dotenv()
@@ -134,18 +136,23 @@ async def classify_videos(tag: str = Query(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
     
+class UpdateDecisionModel(BaseModel):
+    video_id: str
+    status: str
+    classes: List[str]
+
 @app.post("/update-decision/")
-async def update_decision(video_id: str, status: str, classes: list):
+async def update_decision(update_decision: UpdateDecisionModel):
     try:
         # Update the decision for the specified video ID
         update_result = await collection.update_one(
-            {"_id": ObjectId(video_id)},
-            {"$set": {"decision.status": status, "decision.classes": classes}}
+            {"_id": ObjectId(update_decision.video_id)},
+            {"$set": {"decision.status": update_decision.status, "decision.classes": update_decision.classes}}
         )
         
         if update_result.modified_count > 0:
             # Fetch the updated document
-            updated_document = await collection.find_one({"_id": ObjectId(video_id)})
+            updated_document = await collection.find_one({"_id": ObjectId(update_decision.video_id)})
             if updated_document:
                 # Convert ObjectId to string
                 updated_document["_id"] = str(updated_document["_id"])
@@ -153,7 +160,7 @@ async def update_decision(video_id: str, status: str, classes: list):
             else:
                 raise HTTPException(status_code=404, detail="Document not found after update")
         else:
-            return {"message": f"No matching video ID found: {video_id}"}
+            return {"message": f"No matching video ID found: {update_decision.video_id}"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
