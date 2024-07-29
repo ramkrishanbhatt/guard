@@ -5,7 +5,7 @@ export const StyledBoxDisplay = styled(Box)({
     backgroundColor: "#016DD9", 
     borderRadius: "10px",
     width: "150px",
-    marginRight: "20px",
+    //marginRight: "20px",
     marginBottom: "16px"
   });
 
