@@ -19,7 +19,7 @@ const Frames = ({url, times}:{url: string, times: number[]}) => {
           if (frame) {
             capturedFrames.push(frame);
           }
-          await delay(500); 
+          //await delay(500); 
         }
         setFrames(capturedFrames);
       }
