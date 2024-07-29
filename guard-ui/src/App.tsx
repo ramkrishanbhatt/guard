@@ -40,30 +40,29 @@ function App() {
 
   return (
     <div className="App">
-      <Box height={"100vh"} display={"flex"} flexDirection={"column"}>
+      <Box height={"100vh"} bgcolor={"#F1FAFC"} display={"flex"} flexDirection={"column"}>
         <Box>
           <Stack
-            bgcolor={"#243B54"}
+            
             height={"60px"}
             px={3}
             alignItems={"center"}
             justifyContent={"space-between"}
             direction={"row"}
-            borderBottom={"8px solid #63BFDD"}
           >
-            <img src={Logo} width={"200px"} height={"35px"} />
+            <img src={Logo} width={"230px"} height={"35px"} />
             <Typography
               alignItems={"center"}
               justifyContent={"center"}
               display={"flex"}
-              color={"white"}
+              color={"#006dd9"}
             >
               <Person /> &nbsp; Welcome,{" "}
               <span style={{ fontWeight: 600 }}>User</span>
             </Typography>
           </Stack>
           <Stack px={3} alignItems={"center"} direction={"row"} spacing={1}>
-            <Box bgcolor={"#243B54"} px={3} py={0.48} color={"white"}>
+            <Box px={3} py={0.48} color={"#006dd9"} borderBottom={"4px solid #006dd9"}>
               <IconButton
                 sx={{ p: 0.2 }}
                 color="inherit"
@@ -72,10 +71,10 @@ function App() {
                 <Home />
               </IconButton>
             </Box>
-            <Box bgcolor={"#243B54"} px={3} py={1} color={"white"}>
+            <Box px={3} py={1} color={"black"}>
               Review Screen
             </Box>
-            <Box bgcolor={"#243B54"} px={3} py={1} color={"white"}>
+            <Box px={3} py={1} color={"black"}>
               Moderator Monitoring
             </Box>
           </Stack>
@@ -91,7 +90,7 @@ function App() {
             {/* <Frames /> */}
           </Box>
         ) : (
-          <Box flex={1}>
+          <Box flex={1} p={3} mb={2} height={"inherit"} overflow={"hidden"}>
             <QueueDetails classes={averageScores}
               onClick={() => {
                 setView(true);
