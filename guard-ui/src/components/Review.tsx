@@ -1,5 +1,5 @@
 import { Box, Stack, Button, Grid } from "@mui/material";
-import { StyledBoxDisplay } from "./components.Style";
+import { StyledBoxDisplay, StyledShadowedStack } from "./components.Style";
 import Frames from "./Frames";
 import ReviewDecidingGrid from "./ReviewDecidingGrid";
 import { useEffect, useState } from "react";
@@ -18,24 +18,6 @@ const Review = ({
     { text: "Review Time", val: "4:23:52" },
   ];
 
-  const textInAiDetection = [
-    { text: "Text 1", color: "#A9D18E" },
-    { text: "Text 2", color: "#F4AB83" },
-    { text: "Text 3", color: "#D6DCE5" },
-  ];
-
-  const qualityTools = [
-    { text: "RESOLUTION:", val: "XXX" },
-    { text: "AUDIO QUALITY:", val: "XXX" },
-    { text: "XXX:", val: "XXX" },
-  ];
-
-  const notes = [
-    { text: "Notes" },
-    { text: "Annotations" },
-    //{text: "Transfer"},
-  ];
-
   const rejectionText = [
     { text: "Hate Speech" },
     { text: "Nudity" },
@@ -48,6 +30,40 @@ const Review = ({
   ];
 
   const [url, setUrl] = useState("");
+  const [output, setOutput] = useState<any[]>([]);
+  const [data, setData] = useState({
+    low: [],
+    medium: [],
+    high: [],
+    reject: [],
+  });
+
+  const getClassesAndScore = (time: number) => {
+    const res = output.find((_) => _.time === time);
+    console.log(time, res);
+    const filteredData = {
+      low: [],
+      high: [],
+      medium: [],
+      reject: [],
+    };
+
+    res.classes.forEach((e: any) => {
+      const score = e.score;
+
+      if (score < 0.2 && score > 0) {
+        filteredData.low = filteredData.low.concat(e);
+      } else if (score < 0.4 && score > 0.2) {
+        filteredData.medium = filteredData.medium.concat(e);
+      } else if (score < 0.6 && score > 0.4) {
+        filteredData.high = filteredData.high.concat(e);
+      } else if (score > 0.8) {
+        filteredData.reject = filteredData.reject.concat(e);
+      }
+    });
+    setData(() => filteredData);
+    console.log(filteredData);
+  };
 
   const getVideoDetails = async () => {
     const response = await fetch(
@@ -56,6 +72,7 @@ const Review = ({
     if (response.ok) {
       const videosData = await response.json();
       setUrl(() => videosData.fileData.file_path);
+      setOutput(() => videosData.hiveResponse.status[0].response.output);
     } else {
       setUrl("");
     }
@@ -64,10 +81,9 @@ const Review = ({
   useEffect(() => {
     getVideoDetails();
   }, [id]);
-  console.log(id);
 
   return (
-    <Box bgcolor={"#F1FAFC"}>
+    <Box bgcolor={"#F1FAFC"} px={3}>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         {countTime.map((_) => (
           <StyledBoxDisplay m={1} p={1} color={"#FFFFFF"} fontWeight={600}>
@@ -75,86 +91,74 @@ const Review = ({
           </StyledBoxDisplay>
         ))}
       </Box>
-      <Grid container rowSpacing={3}>
+      <Grid container columns={12} spacing={3}>
         <Grid
           item
-          xs={6}
-          mt={"30px"}
-          marginLeft={"10px"}
+          md={6}
+          //mt={"30px"}
+          //marginLeft={"10px"}
           pt={"30px"}
-          height={"420px"}
+          height={"60vh"}
         >
-          <Stack>
-            {/* <Button onClick={onClick}>Close</Button> */}
-            <Frames url={url || ""} times={times} />
-          </Stack>
+          <Frames url={url || ""} times={times} onClick={getClassesAndScore} />
         </Grid>
-        <Grid
-          item
-          xs={5.9}
-          mt={2}
-          p={"15px"}
-          direction={"row"}
-          spacing={1}
-          borderRadius={"25px"}
-        >
-          <Grid container spacing={{ md: 0.5 }}>
-            <Grid item md={5.9} /* border={"1px solid black"} */ mr={1.5}>
-              <ReviewDecidingGrid
-                text="High confidence score"
-                data={rejectionText}
-                required={false}
-              />
-            </Grid>
-            <Grid item md={5.9}>
-              <ReviewDecidingGrid
-                text="Medium confidence score"
-                data={rejectionText}
-                required={false}
-              />
-            </Grid>
-            <Grid item md={5.9} mt={"16px"} mr={1.5}>
-              <ReviewDecidingGrid
-                text="Low confidence score"
-                data={rejectionText}
-                required={false}
-              />
-            </Grid>
-            <Grid item md={5.9} mt={"16px"}>
-              <ReviewDecidingGrid
-                text="Rejection or Approval space"
-                data={rejectionText}
-                required={false}
-              />
-              <Grid mt={"16px"} spacing={{ md: 0.5 }}>
-                <Button
-                  sx={{
-                    backgroundColor: "#405BBA",
-                    color: "#FFFFFF",
-                    padding: "10px",
-                    fontWeight: 500,
-                    borderRadius: "10px",
-                    ":hover": { bgcolor: "#405BBA" },
-                  }}
-                >
-                  Approve
-                </Button>
-                <Button
-                  sx={{
-                    backgroundColor: "#FF0054",
-                    color: "#FFFFFF",
-                    padding: "10px",
-                    fontWeight: 500,
-                    borderRadius: "10px",
-                    marginLeft: "10px",
-                    ":hover": { bgcolor: "#FF0054" },
-                  }}
-                >
-                  Reject
-                </Button>
-              </Grid>
-            </Grid>
+
+        <Grid item container md={6} spacing={1}>
+          <Grid item md={6}>
+            <ReviewDecidingGrid
+              text="High confidence score"
+              data={data.high}
+              required={false}
+            />
           </Grid>
+          <Grid item md={6}>
+            <ReviewDecidingGrid
+              text="Medium confidence score"
+              data={data.medium}
+              required={false}
+            />
+          </Grid>
+          <Grid item md={6}>
+            <ReviewDecidingGrid
+              text="Low confidence score"
+              data={data.low}
+              required={false}
+            />
+          </Grid>
+          <Grid item md={6}>
+            <ReviewDecidingGrid
+              text="Rejection or Approval space"
+              data={data.reject}
+              required={false}
+            />
+          </Grid>
+        </Grid>
+        <Grid item md={12} display={"flex"} justifyContent={"flex-end"}>
+          <Button
+            sx={{
+              backgroundColor: "#405BBA",
+              color: "#FFFFFF",
+              padding: "10px",
+              fontWeight: 500,
+              borderRadius: "10px",
+              ":hover": { bgcolor: "#405BBA" },
+            }}
+          >
+            Approve
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: "#FF0054",
+              color: "#FFFFFF",
+              padding: "10px",
+              fontWeight: 500,
+              borderRadius: "10px",
+              marginLeft: "10px",
+              ":hover": { bgcolor: "#FF0054" },
+            }}
+          >
+            Reject
+          </Button>
         </Grid>
       </Grid>
     </Box>
