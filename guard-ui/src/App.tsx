@@ -13,9 +13,11 @@ import { response } from "./components/Data";
 
 function App() {
   const [view, setView] = useState(false);
+  const [id, setId] = useState("");
+  const [times, setTimes] = useState<number[]>([]);
 
-  const scoresSum:any = {};
-  const counts:any = {};
+  const scoresSum: any = {};
+  const counts: any = {};
 
   // Iterate through each item in the data array
   response.status.response.output.forEach((item) => {
@@ -40,10 +42,14 @@ function App() {
 
   return (
     <div className="App">
-      <Box height={"100vh"} bgcolor={"#F1FAFC"} display={"flex"} flexDirection={"column"}>
+      <Box
+        height={"100vh"}
+        bgcolor={"#F1FAFC"}
+        display={"flex"}
+        flexDirection={"column"}
+      >
         <Box>
           <Stack
-            
             height={"60px"}
             px={3}
             alignItems={"center"}
@@ -62,7 +68,12 @@ function App() {
             </Typography>
           </Stack>
           <Stack px={3} alignItems={"center"} direction={"row"} spacing={1}>
-            <Box px={3} py={0.48} color={"#006dd9"} borderBottom={"4px solid #006dd9"}>
+            <Box
+              px={3}
+              py={0.48}
+              color={view ? "black" : "#006dd9"}
+              borderBottom={view ? "none" : "4px solid #006dd9"}
+            >
               <IconButton
                 sx={{ p: 0.2 }}
                 color="inherit"
@@ -71,10 +82,16 @@ function App() {
                 <Home />
               </IconButton>
             </Box>
-            <Box px={3} py={1} color={"black"}>
+            <Box
+              px={3}
+              py={1}
+              fontWeight={600}
+              color={view ? "#006dd9" : "black"}
+              borderBottom={!view ? "none" : "4px solid #006dd9"}
+            >
               Review Screen
             </Box>
-            <Box px={3} py={1} color={"black"}>
+            <Box px={3} py={1} fontWeight={600} color={"black"}>
               Moderator Monitoring
             </Box>
           </Stack>
@@ -85,15 +102,19 @@ function App() {
               onClick={() => {
                 setView(false);
               }}
-              data={""}
+              id={id}
+              times={times}
             />
             {/* <Frames /> */}
           </Box>
         ) : (
           <Box flex={1} p={3} mb={2} height={"inherit"} overflow={"hidden"}>
-            <QueueDetails classes={averageScores}
-              onClick={() => {
+            <QueueDetails
+              classes={averageScores}
+              onClick={(id: string, times: number[]) => {
                 setView(true);
+                setId(id);
+                setTimes(()=>times);
               }}
             />
           </Box>
