@@ -48,7 +48,7 @@ const Review = ({
       reject: [],
     };
 
-    res.classes.forEach((e: any) => {
+    res?.classes.forEach((e: any) => {
       const score = e.score;
 
       if (score < 0.2 && score > 0) {
@@ -81,6 +81,10 @@ const Review = ({
   useEffect(() => {
     getVideoDetails();
   }, [id]);
+
+  useEffect(()=>{
+    getClassesAndScore(times[0]);
+  },[output])
 
   return (
     <Box bgcolor={"#F1FAFC"} px={3}>
