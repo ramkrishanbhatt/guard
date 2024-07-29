@@ -97,7 +97,10 @@ async def process_video_endpoint(file: UploadFile = File(...)):
     try:
         file_id = await save_video(file)
         file.filename = file_id
-        file.file_path = os.path.join(VIDEO_STORAGE_PATH, file_id)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        # Construct the relative path to the videos directory
+        video_url = f"/videos/{file_id}"
+        file.file_path = video_url
         processed_data = await process_video(file)
         
         # Assuming you have a MongoDB collection named 'collection'
