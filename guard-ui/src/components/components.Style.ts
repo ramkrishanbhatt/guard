@@ -1,17 +1,18 @@
-import { Box, Grid, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { style } from "@mui/system";
 
 export const StyledBoxDisplay = styled(Box)({
-    backgroundColor: "#00B0F0", 
-    borderRadius: "25px",
-    width: "200px"
+    backgroundColor: "#016DD9", 
+    borderRadius: "10px",
+    width: "150px",
+    marginRight: "20px",
+    marginBottom: "16px"
   });
 
   export const StyledBoxTools = styled(Box)({
-    backgroundColor: "#F1F0F0",
+    backgroundColor: "#5F5F5F",
     justifyContent: "center",
-    width: "310px"
+    width: "300px"
   })
 
   export const StyledBoxScore = styled(Box)({
@@ -22,14 +23,7 @@ export const StyledBoxDisplay = styled(Box)({
 
   export const StyledBoxCommentDialog = styled(Box)({
     backgroundColor: "#D6DCE5",
-    width: "310px"
-  })
-
-  export const StyledBoxComment = styled(Box)({
-    backgroundColor: "#D5E4F1",
-    justifyContent: "center",
-    width: "310px",
-    height: "100px"
+    width: "300px"
   })
 
   export const StyledShadowedStack = styled(Stack)({
@@ -57,4 +51,11 @@ export const StyledBoxDisplay = styled(Box)({
   export const StyledLargeTypography = styled(Box)({
     fontSize: "24px",
     fontWeight: 600
+  })
+
+  export const StyledBoxComment = styled(Box)({
+    backgroundColor: "#D5E4F1",
+    justifyContent: "center",
+    width: "300px",
+    height: "105px"
   })
