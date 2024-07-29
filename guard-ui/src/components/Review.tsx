@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Stack, TextField, Typography, Button, Grid } from "@mui/material";
 import {StyledBoxComment, StyledBoxCommentDialog, StyledBoxDisplay, StyledBoxScore, StyledBoxTools} from "./components.Style"
 import Frames from "./Frames";
 
-const Review = ({ data, onClick }: { data: any; onClick: any }) => {
+const Review = ({ id, onClick, times }: { id: string; onClick: any, times: number[] }) => {
 
   const countTime = [
     {text: "Processed Count", val: "451"},
@@ -27,6 +27,26 @@ const Review = ({ data, onClick }: { data: any; onClick: any }) => {
     {text: "Annotations"},
     //{text: "Transfer"},
   ]
+
+  const [url, setUrl] = useState("");
+
+  const getVideoDetails = async () => {
+    const response = await fetch(
+      `http://127.0.0.1:8000/get-processed-data/${id}`
+    );
+    if (response.ok) {
+      const videosData = await response.json();
+      setUrl(() => videosData.fileData.file_path);
+    } else {
+      setUrl("");
+    }
+  };
+
+  useEffect(()=>{
+    getVideoDetails();
+  },[id])
+console.log(id);
+
   return (
     <Stack>
       <Box sx={{display: "flex", justifyContent: 'flex-end'}}>
@@ -41,8 +61,8 @@ const Review = ({ data, onClick }: { data: any; onClick: any }) => {
         rowSpacing={3}>
         <Grid item xs={6} m={1.5} bgcolor={"lightblue"} height={"435px"}>
           <Stack>
-            <Button onClick={onClick}>Close</Button>
-              <Frames />
+            {/* <Button onClick={onClick}>Close</Button> */}
+              <Frames url={url || ""} times={times}/>
             </Stack>
         </Grid>
         <Grid item xs={2.9}>
