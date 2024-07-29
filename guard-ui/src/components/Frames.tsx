@@ -2,13 +2,11 @@ import { Box, Stack } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 
-const Frames: React.FC = () => {
+const Frames = ({url, times}:{url: string, times: number[]}) => {
   const playerRef = useRef<any>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [videoUrl, setVideoUrl] = useState<string>(
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-  );
-  const [timestamps, setTimestamps] = useState<number[]>([1, 2, 3, 4, 5, 6]);
+  const [videoUrl, setVideoUrl] = useState<string>(url);
+  const [timestamps, setTimestamps] = useState<number[]>(times);
   const [frames, setFrames] = useState<string[]>([]);
 
   useEffect(() => {
@@ -33,7 +31,7 @@ const Frames: React.FC = () => {
     return new Promise((resolve) => {
       if (playerRef.current) {
         const player =
-          playerRef.current.getInternalPlayer() as HTMLVideoElement;
+          playerRef?.current?.getInternalPlayer() as any || {};
         player.currentTime = time;
         player.onseeked = () => resolve();
       }
@@ -69,7 +67,7 @@ const Frames: React.FC = () => {
     >
       <ReactPlayer
         ref={playerRef}
-        url={videoUrl}
+        url={`http://127.0.0.1:8000${url}`}
         controls={true}
         width="60%"//change
         height="300px"//change
