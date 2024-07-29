@@ -217,7 +217,6 @@ const QueueDetails = ({
       ]);
     }
   };
-  console.log(videos);
 
   const getAverageScore = (data: any[]) => {
     let sum = 0;
@@ -245,6 +244,11 @@ const QueueDetails = ({
       value: "X,XXX,XXX",
     },
   ];
+
+  useEffect(()=>{
+    getVideosByTag(classes[0].class);
+  },[])
+
   return (
     <>
       <Grid container spacing={2} columns={{ md: 12 }}>
