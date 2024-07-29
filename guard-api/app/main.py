@@ -12,6 +12,13 @@ from .process_video import process_video
 from bson import ObjectId
 from pydantic import BaseModel
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
+ 
+origins = [
+"http://localhost",
+"http://localhost:8000",
+    # Add more origins as needed
+]
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,6 +26,14 @@ load_dotenv()
 VIDEO_STORAGE_PATH = os.getenv("VIDEO_STORAGE_PATH", "/app/app/storage/videos/")
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #Routers
 @app.post("/items/", response_model=ItemResponseSchema)
@@ -92,14 +107,14 @@ async def process_video_endpoint(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
     
 @app.get("/classify-videos/")
-async def classify_videos(tag: str = Query(...)):
+async def classify_videos(tags: List[str] = Query(...)):
     try:
         # Define the filter query
         filter_query = {
             "hiveResponse.status.response.output.classes": {
                 "$elemMatch": {
-                    "class": tag,
-                    "score":  {"$gt": 2.9038022830718546e-7}
+                    "class": {"$in": tags},
+                    "score": {"$gt": 2.9038022830718546e-7}
                 }
             }
         }
@@ -111,25 +126,28 @@ async def classify_videos(tag: str = Query(...)):
         # Initialize a dictionary to store frames by video_id
         video_frames = {}
         
-        # Extract frames with the specified tag from each video
+        # Extract frames with the specified tags from each video
         for video in videos:
             video_id = str(video["_id"])
             if video_id not in video_frames:
-                video_frames[video_id] = []
+                video_frames[video_id] = {
+                    "frames": [],
+                    "file_data": video.get("fileData")  # Assuming file data is stored in the document
+                }
 
             for status in video.get("hiveResponse", {}).get("status", []):
                 for frame in status.get("response", {}).get("output", []):
-                    # We are assuming `bounding_poly` is not present, so we will remove related code
                     for class_score in frame.get("classes", []):
-                        if class_score["class"] == tag and class_score["score"] > 2.9038022830718546e-7:
-                            video_frames[video_id].append({
+                        if class_score["class"] in tags and class_score["score"] > 2.9038022830718546e-7:
+                            video_frames[video_id]["frames"].append({
                                 "time": frame["time"],
                                 "score": class_score["score"]
                             })
                             print(f"Added frame: {frame['time']} with score: {class_score['score']}")
 
         # Convert the dictionary to a list of dictionaries
-        video_frames_list = [{"video_id": vid, "frames": frames} for vid, frames in video_frames.items()]
+        video_frames_list = [{"video_id": vid, "frames": data["frames"],
+                               "file_data": data["file_data"]} for vid, data in video_frames.items()]
         
         return JSONResponse(content=video_frames_list)
     except Exception as e:
