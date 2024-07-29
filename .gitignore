@@ -2,3 +2,5 @@
 guard-api/uploaded_files/*
 __pycache__
 guard-ui/node_modules/*
+env
+venv
