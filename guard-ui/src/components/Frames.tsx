@@ -1,5 +1,5 @@
 import { Box, Stack } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 
 const Frames = ({url, times}:{url: string, times: number[]}) => {
@@ -85,10 +85,11 @@ const Frames = ({url, times}:{url: string, times: number[]}) => {
         direction={"row"}
         width={"50%"}
         spacing={50}
+        overflow={"auto"}
       >
-        <Box padding={.5} marginRight={1}>{/* change */}
+        <Box padding={.5} marginRight={0.5}>{/* change */}
           {frames.map((frame, index) => (
-            <img key={index} src={frame} alt={`Frame ${index}`} />
+            <img key={index} src={frame} alt={`Frame ${index}`} width={"135px"}/>
           ))}
         </Box>
       </Stack>
