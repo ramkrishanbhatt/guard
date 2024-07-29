@@ -97,7 +97,7 @@ const Frames = ({
       >
         {frames.map((frame, index) => (
           <StyledShadowedStack
-            sx={{ p: 0, borderRadius: 0, ":hover": { cursor: "pointer" } }}
+            sx={{ p: 0, borderRadius: 0, ":hover": { cursor: "pointer" }, height: "max-content" }}
             border={index === selectedFrame ? "3px solid #006dd9" : "none"}
           >
             <img
