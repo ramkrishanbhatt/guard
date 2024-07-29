@@ -8,7 +8,7 @@ from app.database import db, collection
 from app.storage.video_storage import save_video, get_video_url
 from dotenv import load_dotenv
 from fastapi.responses import JSONResponse
-from .process_video import process_video, extract_frames_with_tag
+from .process_video import process_video, filter_data
 from bson import ObjectId
 
 # Load environment variables from .env file
@@ -79,6 +79,7 @@ async def process_video_endpoint(file: UploadFile = File(...)):
     try:
         file_id = await save_video(file)
         file.filename = file_id
+        file.file_path = os.path.join(VIDEO_STORAGE_PATH, file_id)
         processed_data = await process_video(file)
         
         # Assuming you have a MongoDB collection named 'collection'
@@ -91,8 +92,18 @@ async def process_video_endpoint(file: UploadFile = File(...)):
 @app.get("/classify-videos/")
 async def classify_videos(tag: str = Query(...)):
     try:
-        # Fetch all video documents
-        videos_cursor = collection.find()
+        # Define the filter query
+        filter_query = {
+            "hiveResponse.status.response.output.classes": {
+                "$elemMatch": {
+                    "class": tag,
+                    "score":  {"$gt": 2.9038022830718546e-7}
+                }
+            }
+        }
+
+        # Fetch all video documents matching the filter
+        videos_cursor = collection.find(filter_query)
         videos = await videos_cursor.to_list(length=None)  # Convert cursor to a list
         
         # Initialize a dictionary to store frames by video_id
@@ -100,20 +111,21 @@ async def classify_videos(tag: str = Query(...)):
         
         # Extract frames with the specified tag from each video
         for video in videos:
-            hive_response = video.get("hiveResponse", {})
-            frames = extract_frames_with_tag(hive_response, tag)
-            
             video_id = str(video["_id"])
             if video_id not in video_frames:
                 video_frames[video_id] = []
-            
-            for frame in frames:
-                video_frames[video_id].append({
-                    "time": frame["time"],
-                    "score": frame["score"],
-                    "bounding_poly": frame["bounding_poly"]
-                })
-        
+
+            for status in video.get("hiveResponse", {}).get("status", []):
+                for frame in status.get("response", {}).get("output", []):
+                    # We are assuming `bounding_poly` is not present, so we will remove related code
+                    for class_score in frame.get("classes", []):
+                        if class_score["class"] == tag and class_score["score"] > 2.9038022830718546e-7:
+                            video_frames[video_id].append({
+                                "time": frame["time"],
+                                "score": class_score["score"]
+                            })
+                            print(f"Added frame: {frame['time']} with score: {class_score['score']}")
+
         # Convert the dictionary to a list of dictionaries
         video_frames_list = [{"video_id": vid, "frames": frames} for vid, frames in video_frames.items()]
         
@@ -123,12 +135,12 @@ async def classify_videos(tag: str = Query(...)):
 
     
 @app.post("/update-decision/")
-async def update_decision(video_id: str, decision: str):
+async def update_decision(video_id: str, status: str, classes: list):
     try:
         # Update the decision for the specified video ID
         update_result = await collection.update_one(
             {"_id": ObjectId(video_id)},
-            {"$set": {"decision": decision}}
+            {"$set": {"decision.status": status, "decision.classes": classes}}
         )
         
         if update_result.modified_count > 0:
@@ -204,8 +216,3 @@ async def get_video(file_id: str):
         raise HTTPException(status_code=404, detail="Video not found")
 
     return FileResponse(file_path)
-
-
-if __name__=='_main_':
-    import uvicorn
-    uvicorn.run(app, port = 8000)
