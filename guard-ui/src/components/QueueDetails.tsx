@@ -153,13 +153,13 @@ const QueueDetails = ({
 
   const getVideosByTag = async (tag: string) => {
     setSelectedTag(tag);
-    // const response = await fetch(
-    //   `http://127.0.0.1:8000/classify-videos/?tag=${tag}`
-    // );
-    // if (response.ok) {
-    //   const videosData = await response.json();
-    //   setVideos(() => videosData);
-    // } else {
+    const response = await fetch(
+      `http://127.0.0.1:8000/classify-videos/?tags=${tag}`
+    );
+    if (response.ok) {
+      const videosData = await response.json();
+      setVideos(() => videosData);
+    } else {
       setVideos(() => [
         {
           video_id: "66a78d5782dcf699a8aa486a",
@@ -215,8 +215,9 @@ const QueueDetails = ({
           ],
         },
       ]);
-    // }
+    }
   };
+  console.log(videos);
 
   const getAverageScore = (data: any[]) => {
     let sum = 0;
@@ -369,23 +370,27 @@ const QueueDetails = ({
         <Grid item md={2} marginBottom={1}></Grid>
         <Grid item md={10} marginBottom={1}>
           <Stack
-            color={"darkblue"}
+            color={"gray"}
             fontSize={"12px"}
             fontWeight={600}
             direction={"row"}
           >
-            <Typography
+            <StyledSmallTypography
               ml={1.5}
               display={"flex"}
               alignItems={"flex-start"}
               flex={1}
             >
               Item Details
-            </Typography>
-            <Typography width={150}>Pin Queue</Typography>
-            <Typography width={150}>Live Moderators</Typography>
-            <Typography width={140}>Frames Count</Typography>
-            <Typography width={170}>Score</Typography>
+            </StyledSmallTypography>
+            <StyledSmallTypography width={150}>Pin Queue</StyledSmallTypography>
+            <StyledSmallTypography width={150}>
+              Live Moderators
+            </StyledSmallTypography>
+            <StyledSmallTypography width={140}>
+              Frames Count
+            </StyledSmallTypography>
+            <StyledSmallTypography width={170}>Score</StyledSmallTypography>
           </Stack>
         </Grid>
       </Grid>
@@ -404,7 +409,7 @@ const QueueDetails = ({
                 sx={{
                   boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
                   ":hover": {
-                    cursor: "grab",
+                    cursor: "pointer",
                     bgcolor: "#006dd9",
                     color: "white",
                   },
@@ -438,13 +443,16 @@ const QueueDetails = ({
                     boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
                     flexDirection: "row",
                     ":hover": {
-                      cursor: "grab",
+                      cursor: "pointer",
                       bgcolor: "#006dd9",
                       color: "white",
                     },
                   }}
                   maxWidth={"-webkit-fill-available"}
-                  onClick={onClick}
+                  onClick={() => {
+                    const times = _?.frames?.map((_:any)=>_?.time)
+                    onClick(_?.video_id || "", times);
+                  }}
                 >
                   <StyledSmallTypography
                     maxWidth={"-webkit-fill-available"}
