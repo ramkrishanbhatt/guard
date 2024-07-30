@@ -1,13 +1,7 @@
-from pydantic import BaseModel, Field, BaseConfig
-from bson import ObjectId
-from typing import Optional
+from pydantic import BaseModel
+from typing import List
 
-class Item(BaseModel):
-    id: Optional[str] = Field(alias="_id")
-    name: str
-    description: str
-    price: float
-
-    class Config(BaseConfig):
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
+class UpdateDecisionModel(BaseModel):
+    video_id: str
+    status: str
+    classes: List[str]

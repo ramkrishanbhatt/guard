@@ -1,22 +1,20 @@
 import os
 import json
 from fastapi import FastAPI, HTTPException, UploadFile, File, Query
-from fastapi.responses import FileResponse
-from app.models import Item
-from app.schemas import ItemCreateSchema, ItemResponseSchema
 from app.database import db, collection
 from app.storage.video_storage import save_video, get_video_url
 from dotenv import load_dotenv
 from fastapi.responses import JSONResponse
 from .process_video import process_video
 from bson import ObjectId
-from pydantic import BaseModel
+from app.models import UpdateDecisionModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
  
 origins = [
 "http://localhost",
 "http://localhost:8000",
+"http://localhost:80",
 "http://localhost:3000"
     # Add more origins as needed
 ]
@@ -37,32 +35,6 @@ app.add_middleware(
 )
 
 #Routers
-@app.post("/items/", response_model=ItemResponseSchema)
-async def create_item(item: ItemCreateSchema):
-    item_dict = item.dict()
-    new_item = await db["items"].insert_one(item_dict)
-    created_item = await db["items"].find_one({"_id": new_item.inserted_id})
-    created_item["_id"] = str(created_item["_id"])  # Convert ObjectId to string
-    return ItemResponseSchema(**created_item)
-
-
-@app.get("/items/{item_id}", response_model=ItemResponseSchema)
-async def read_item(item_id: str):
-    item = await db["items"].find_one({"_id": ObjectId(item_id)})
-    if item is None:
-        raise HTTPException(status_code=404, detail="Item not found")
-    item["_id"] = str(item["_id"])  # Convert ObjectId to string
-    return ItemResponseSchema(**item)
-
-
-@app.post("/upload_video/")
-async def upload_video(file: UploadFile = File(...)):
-    file_id = await save_video(file)
-    video_url = get_video_url(file_id)
-    return {"video_url": video_url}
-
-
-
 class MongoEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, ObjectId):
@@ -156,12 +128,6 @@ async def classify_videos(tags: List[str] = Query(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    
-class UpdateDecisionModel(BaseModel):
-    video_id: str
-    status: str
-    classes: List[str]
-
 @app.post("/update-decision/")
 async def update_decision(update_decision: UpdateDecisionModel):
     try:
@@ -209,6 +175,10 @@ async def get_processed_data():
 @app.get("/get-processed-data/{id}")
 async def get_processed_data(id: str):
     try:
+        # Validate ObjectId
+        if not ObjectId.is_valid(id):
+            raise HTTPException(status_code=400, detail="Invalid ID format")
+
         # Fetch the document with the given ID
         document = await collection.find_one({"_id": ObjectId(id)})
         
@@ -219,28 +189,7 @@ async def get_processed_data(id: str):
         document["_id"] = str(document["_id"])
         
         return JSONResponse(content=document)
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.put("/items/{item_id}/video", response_model=ItemResponseSchema)
-async def update_item_with_video(item_id: str, file: UploadFile = File(...)):
-    file_id = await save_video(file)
-    video_url = get_video_url(file_id)
-
-    update_result = await db["items"].update_one({"_id": ObjectId(item_id)}, {"$set": {"video_url": video_url}})
-
-    if update_result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="Item not found or no update needed")
-
-    updated_item = await db["items"].find_one({"_id": ObjectId(item_id)})
-    updated_item["_id"] = str(updated_item["_id"])  # Convert ObjectId to string
-    return ItemResponseSchema(**updated_item)
-
-@app.get("/videos/{file_id}")
-async def get_video(file_id: str):
-    file_path = os.path.join(VIDEO_STORAGE_PATH, file_id)
-
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="Video not found")
-
-    return FileResponse(file_path)
+        raise HTTPException(status_code=500, detail="Internal Server Error")
