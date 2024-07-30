@@ -61,7 +61,7 @@ const Review = ({
 
   const getVideoDetails = async () => {
     const response = await fetch(
-      `http://127.0.0.1:8000/get-processed-data/${id}`
+      `http://3.143.254.4/get-processed-data/${id}`
     );
     if (response.ok) {
       const videosData = await response.json();
@@ -73,7 +73,7 @@ const Review = ({
   };
 
   const approveOrRejectContent = async (val: string) => {
-    const response = await fetch(`http://127.0.0.1:8000/update-decision`, {
+    const response = await fetch(`http://3.143.254.4/update-decision`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +85,7 @@ const Review = ({
       }),
     });
     if (response.ok) {
-      alert("Approved");
+      alert(val);
       onClick();
     }
   };
