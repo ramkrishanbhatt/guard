@@ -7,6 +7,7 @@ import {
 import Frames from "./Frames";
 import ReviewDecidingGrid from "./ReviewDecidingGrid";
 import { useEffect, useState } from "react";
+import { classes } from "./Data";
 
 const Review = ({
   id,
@@ -34,7 +35,6 @@ const Review = ({
 
   const getClassesAndScore = (time: number) => {
     const res = output.find((_) => _.time === time);
-    console.log(time, res);
     const filteredData = {
       low: [],
       high: [],
@@ -44,19 +44,19 @@ const Review = ({
 
     res?.classes.forEach((e: any) => {
       const score = e.score;
-
-      if (score < 0.2 && score > 0) {
+      const item = classes.find((_)=>_.class===e.class);
+      if (score < 0.4 && score > 0.01 && item?.include === "Y") {
         filteredData.low = filteredData.low.concat(e);
-      } else if (score < 0.4 && score > 0.2) {
+      } else if (score <= 0.7 && score >= 0.4 && item?.include === "Y") {
         filteredData.medium = filteredData.medium.concat(e);
-      } else if (score < 0.6 && score > 0.4) {
+      } else if (score > 0.7 && item?.include === "Y") {
         filteredData.high = filteredData.high.concat(e);
-      } else if (score > 0.8) {
-        filteredData.reject = filteredData.reject.concat(e);
-      }
+      } 
+      // else if (score > 0.8) {
+      //   filteredData.reject = filteredData.reject.concat(e);
+      // }
     });
     setData(() => filteredData);
-    console.log(filteredData);
   };
 
   const getVideoDetails = async () => {
@@ -116,7 +116,7 @@ const Review = ({
       </Stack>
       <Grid container columns={12} spacing={3}>
         <Grid item md={6} pt={"30px"} height={"60vh"}>
-          <Frames url={url || ""} times={times} onClick={getClassesAndScore} />
+          <Frames url={url} times={times} onClick={getClassesAndScore} />
         </Grid>
 
         <Grid item container md={6} spacing={1}>
