@@ -92,8 +92,10 @@ const Frames = ({
         width={"50%"}
         spacing={1}
         overflow={"auto"}
-        height={"inherit"}
+        maxHeight={"-webkit-fill-available"}
         ml={1}
+        alignItems={"center"}
+        justifyContent={"center"}
       >
         {frames.map((frame, index) => (
           <StyledShadowedStack
@@ -109,7 +111,7 @@ const Frames = ({
               key={index}
               src={frame}
               alt={`Frame ${index}`}
-              width={"135px"}
+              width={"80px"}
             />
           </StyledShadowedStack>
         ))}
