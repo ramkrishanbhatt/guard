@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, UploadFile, File, Query
 from app.database import db, collection
 from app.storage.video_storage import save_video, get_video_url
 from dotenv import load_dotenv
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from .process_video import process_video
 from bson import ObjectId
 from app.models import UpdateDecisionModel
@@ -69,7 +69,7 @@ async def process_video_endpoint(file: UploadFile = File(...)):
     try:
         file_id = await save_video(file)
         file.filename = file_id
-        # Construct the relative path to the videos directory
+        # # Construct the relative path to the videos directory
         video_url = get_video_url(file_id)
         file.file_path = video_url
         processed_data = await process_video(file)
@@ -80,6 +80,14 @@ async def process_video_endpoint(file: UploadFile = File(...)):
         return JSONResponse(content={"id": str(insert_result.inserted_id)})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/videos/{file_id}")
+async def get_video(file_id: str):
+    file_path = os.path.join(VIDEO_STORAGE_PATH, file_id)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Video not found")
+
+    return FileResponse(file_path)
     
 @app.get("/classify-videos/")
 async def classify_videos(tags: List[str] = Query(...)):
