@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Install the missing babel plugin
+RUN npm install --save-dev @babel/plugin-proposal-private-property-in-object
+
 # Copy the rest of your application code
 COPY . .
 
