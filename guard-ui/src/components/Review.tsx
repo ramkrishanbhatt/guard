@@ -1,5 +1,9 @@
 import { Box, Stack, Button, Grid } from "@mui/material";
-import { StyledBoxDisplay, StyledShadowedStack } from "./components.Style";
+import {
+  StyledBoxDisplay,
+  StyledShadowedStack,
+  StyledSmallTypography,
+} from "./components.Style";
 import Frames from "./Frames";
 import ReviewDecidingGrid from "./ReviewDecidingGrid";
 import { useEffect, useState } from "react";
@@ -18,17 +22,6 @@ const Review = ({
     { text: "Review Time", val: "4:23:52" },
   ];
 
-  const rejectionText = [
-    { text: "Hate Speech" },
-    { text: "Nudity" },
-    { text: "Personal Information" },
-    { text: "Copy right's violation" },
-    { text: "Bullying" },
-    { text: "Graphics" },
-    { text: "Spam" },
-    { text: "Pass to SME" },
-  ];
-
   const [url, setUrl] = useState("");
   const [output, setOutput] = useState<any[]>([]);
   const [data, setData] = useState({
@@ -37,6 +30,7 @@ const Review = ({
     high: [],
     reject: [],
   });
+  const [tags, setTags] = useState<string[]>([]);
 
   const getClassesAndScore = (time: number) => {
     const res = output.find((_) => _.time === time);
@@ -78,32 +72,50 @@ const Review = ({
     }
   };
 
+  const approveOrRejectContent = async (val: string) => {
+    const response = await fetch(`http://127.0.0.1:8000/update-decision`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        video_id: id,
+        status: val,
+        classes: tags
+      }),
+    });
+    if (response.ok) {
+      alert("Approved");
+      onClick();
+    }
+  };
+
   useEffect(() => {
     getVideoDetails();
   }, [id]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getClassesAndScore(times[0]);
-  },[output])
+  }, [output]);
 
   return (
     <Box bgcolor={"#F1FAFC"} px={3}>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Stack
+        spacing={1}
+        mb={1}
+        direction={"row"}
+        sx={{
+          justifyContent: "flex-end",
+        }}
+      >
         {countTime.map((_) => (
-          <StyledBoxDisplay m={1} p={1} color={"#FFFFFF"} fontWeight={600}>
+          <StyledBoxDisplay p={1} color={"#FFFFFF"} fontWeight={600}>
             {`${_.text} ${_.val}`}
           </StyledBoxDisplay>
         ))}
-      </Box>
+      </Stack>
       <Grid container columns={12} spacing={3}>
-        <Grid
-          item
-          md={6}
-          //mt={"30px"}
-          //marginLeft={"10px"}
-          pt={"30px"}
-          height={"60vh"}
-        >
+        <Grid item md={6} pt={"30px"} height={"60vh"}>
           <Frames url={url || ""} times={times} onClick={getClassesAndScore} />
         </Grid>
 
@@ -137,32 +149,89 @@ const Review = ({
             />
           </Grid>
         </Grid>
-        <Grid item md={12} display={"flex"} justifyContent={"flex-end"}>
-          <Button
+        <Grid
+          item
+          md={7.2}
+          mt={-1.5}
+          display={"flex"}
+          justifyContent={"flex-start"}
+        >
+          <StyledShadowedStack
+            spacing={1}
             sx={{
-              backgroundColor: "#405BBA",
-              color: "#FFFFFF",
-              padding: "10px",
-              fontWeight: 500,
-              borderRadius: "10px",
-              ":hover": { bgcolor: "#405BBA" },
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "row",
             }}
           >
-            Approve
-          </Button>
-          <Button
-            sx={{
-              backgroundColor: "#FF0054",
-              color: "#FFFFFF",
-              padding: "10px",
-              fontWeight: 500,
-              borderRadius: "10px",
-              marginLeft: "10px",
-              ":hover": { bgcolor: "#FF0054" },
-            }}
-          >
-            Reject
-          </Button>
+            <Stack
+              width={"fit-content"}
+              spacing={1}
+              direction="row"
+              useFlexGap
+              flexWrap="wrap"
+            >
+              {queueData.map((_) => (
+                <StyledShadowedStack
+                  width={"130px"}
+                  sx={{
+                    py: 0.5,
+                    px: 1,
+                    borderRadius: 1,
+                    boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                    ":hover": {
+                      cursor: "pointer",
+                      bgcolor: "#006dd9",
+                      color: "white",
+                    },
+                    bgcolor: tags.includes(_) ? "#006dd9" : "white",
+                    color: tags.includes(_) ? "white" : "black",
+                  }}
+                  onClick={() =>
+                    setTags((prev) => {
+                      const data = prev.includes(_)
+                        ? prev.filter((e) => e !== _)
+                        : [...prev, _];
+                      return data;
+                    })
+                  }
+                >
+                  <StyledSmallTypography sx={{ fontSize: "12px" }}>
+                    {_}
+                  </StyledSmallTypography>
+                </StyledShadowedStack>
+              ))}
+            </Stack>
+            <Stack mt={0} direction={"row"} spacing={1}>
+              <Button
+                sx={{
+                  backgroundColor: "#405BBA",
+                  color: "#FFFFFF",
+                  padding: "10px",
+                  fontWeight: 500,
+                  borderRadius: 1,
+                  height: "100%",
+                  ":hover": { bgcolor: "#405BBA" },
+                }}
+                onClick={()=>approveOrRejectContent("Approved")}
+              >
+                Approve
+              </Button>
+              <Button
+                sx={{
+                  backgroundColor: "#FF0054",
+                  color: "#FFFFFF",
+                  padding: "10px",
+                  fontWeight: 500,
+                  borderRadius: 1,
+                  ":hover": { bgcolor: "#FF0054" },
+                }}
+                onClick={()=>approveOrRejectContent("Rejected")}
+              >
+                Reject
+              </Button>
+            </Stack>
+          </StyledShadowedStack>
         </Grid>
       </Grid>
     </Box>
@@ -171,37 +240,13 @@ const Review = ({
 
 export default Review;
 
-{
-  /* <Grid item xs={2.9}>
-          <Grid container>
-            <Grid item justifyContent={"center"}>
-              <StyledBoxTools marginLeft={"15px"} p={"15px"} mt={"5px"}>
-                <Typography mt={"5px"} color={"#FFFFFF"}>AI Detection</Typography>
-              </StyledBoxTools>  
-            </Grid>
-            <Grid item m={"15px"} p={"15px"} bgcolor={"#E3E3E9"} justifyContent={"center"} width={"330px"} height={"350px"}>
-              {textInAiDetection.map((_)=>(
-                <StyledBoxScore m={"20px"} p={"20px"} bgcolor={_.color} textAlign={"center"} color={"#000000"}>
-                  {_.text}
-              </StyledBoxScore>
-              ))}
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={2.9}>
-          {qualityTools.map((_)=>(
-            <StyledBoxTools m={"5px"} p={"5px"} color={"#FFFFFF"} fontWeight={"450px"}>
-              {`${_.text} ${_.val}`}
-            </StyledBoxTools>
-          ))}
-          {notes.map((_)=>(
-            <>
-            <StyledBoxCommentDialog m={"5px"} p={"5px"} >
-              <Typography color={"#002060"}>{_.text}</Typography>
-            </StyledBoxCommentDialog> 
-            <StyledBoxComment m={"5px"} p={"5px"}>
-            </StyledBoxComment>
-            </>
-          ))}
-        </Grid> */
-}
+const queueData = [
+  "Hate Speech",
+  "Bullying",
+  "Personal Information",
+  "Spam",
+  "Nudity",
+  "Graphic Violence",
+  "Copyright Violations",
+  "Pass to SME",
+];
