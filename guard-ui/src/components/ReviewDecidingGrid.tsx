@@ -65,7 +65,7 @@ function ReviewDecidingGrid({
               justifyContent: "space-between",
               p: 1,
               boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-              height: "30px",
+              height: "15px",
               alignItems: "center",
               bgcolor:
                 text === "High confidence score"
@@ -80,7 +80,7 @@ function ReviewDecidingGrid({
             width={"max-content"}
           >
             <StyledSmallTypography alignItems={"center"}>
-              {_.class} {`(${parseFloat((_?.score).toFixed(2))})`}
+              {_.class} {`(${parseFloat((_?.score).toFixed(2))*100}%)`}
             </StyledSmallTypography>
           </StyledShadowedStack>
         ))}

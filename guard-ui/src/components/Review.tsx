@@ -141,13 +141,7 @@ const Review = ({
               required={false}
             />
           </Grid>
-          <Grid item md={6}>
-            <ReviewDecidingGrid
-              text="Rejection or Approval space"
-              data={data.reject}
-              required={false}
-            />
-          </Grid>
+
         </Grid>
         <Grid
           item

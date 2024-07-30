@@ -33,6 +33,7 @@ function App() {
             direction={"row"}
           >
             <img src={Logo} width={"230px"} height={"35px"} />
+            
             <Typography
               alignItems={"center"}
               justifyContent={"center"}
