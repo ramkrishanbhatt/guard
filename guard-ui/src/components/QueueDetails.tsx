@@ -116,25 +116,6 @@ const QueueDetails = ({
     return sum / data.length;
   };
 
-  const data = [
-    {
-      text: "Total Volume",
-      value: "X,XXX,XXX",
-    },
-    {
-      text: "AI Moderated Volume",
-      value: "X,XXX,XXX",
-    },
-    {
-      text: "Queued Volume",
-      value: "X,XXX,XXX",
-    },
-    {
-      text: "Transferred Volume",
-      value: "X,XXX,XXX",
-    },
-  ];
-
   useEffect(()=>{
     getVideosByTag(classes[0].class);
   },[])
@@ -162,7 +143,7 @@ const QueueDetails = ({
                       marginTop: 3,
                     }}
                   >
-                    XX.XX %
+                    {_.percentage}
                   </span>
                 </StyledMediumTypography>
                 <img src={Wave} width={"100%"} height={"35px"} />
@@ -183,7 +164,6 @@ const QueueDetails = ({
             <IconButton component="label" sx={{ alignSelf: "end", p: 0 }}>
               <Upload />
               <VisuallyHiddenInput
-                //onChange={handleFileChange}
                 type="file"
               />
             </IconButton>
@@ -384,48 +364,34 @@ const QueueDetails = ({
           </Grid>
         </Grid>
       </Box>
-      {/* <Stack
-        alignItems={"center"}
-        justifyContent={"center"}
-        direction={"row"}
-        spacing={1}
-        mt={1}
-      >
-        <TextField
-          sx={{
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderRadius: "50px",
-            },
-            "& .MuiOutlinedInput-root": {
-              "&.Mui-focused fieldset": {
-                borderColor: "#177694",
-              },
-            },
-            width: "60%",
-          }}
-          size="small"
-          type="file"
-          onChange={handleFileChange}
-        />
-        <Button
-          sx={{
-            backgroundColor: "lightBlue",
-            borderRadius: "50px",
-            height: "40px",
-            color: "black",
-          }}
-          variant="contained"
-          onClick={handleUpload}
-          disabled={isLoading}
-        >
-          {isLoading ? "Uploading..." : "Upload Video"}
-        </Button>
-      </Stack> */}
     </>
   );
 };
 
 export default QueueDetails;
+
+const data = [
+  {
+    text: "Total Volume",
+    value: "X,XXX,XXX",
+    percentage: "XX.XX %",
+  },
+  {
+    text: "AI Moderated Volume",
+    value: "X,XXX,XXX",
+    percentage: "XX.XX %",
+  },
+  {
+    text: "Queued Volume",
+    value: "X,XXX,XXX",
+    percentage: "XX.XX %",
+  },
+  {
+    text: "Transferred Volume",
+    value: "X,XXX,XXX",
+    percentage: "XX.XX %",
+  },
+];
 
 const statics1 = [
   {
