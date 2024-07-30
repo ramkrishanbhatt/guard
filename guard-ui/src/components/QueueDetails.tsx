@@ -194,7 +194,7 @@ const QueueDetails = ({
               }}
             >
               <StyledMediumTypography alignItems={"center"}>
-                Queue Statics
+                Queue Statistics
               </StyledMediumTypography>
             </StyledShadowedStack>
           </Grid>
@@ -373,60 +373,60 @@ export default QueueDetails;
 const data = [
   {
     text: "Total Volume",
-    value: "X,XXX,XXX",
+    value: "265,903",
     percentage: "XX.XX %",
   },
   {
     text: "AI Moderated Volume",
-    value: "X,XXX,XXX",
-    percentage: "XX.XX %",
+    value: "239,313",
+    percentage: "90.00%",
   },
   {
     text: "Queued Volume",
-    value: "X,XXX,XXX",
-    percentage: "XX.XX %",
+    value: "2,955",
+    percentage: "1.00%",
   },
   {
     text: "Transferred Volume",
-    value: "X,XXX,XXX",
-    percentage: "XX.XX %",
+    value: "26,590",
+    percentage: "10.00%",
   },
 ];
 
 const statics1 = [
   {
     text: "Average AHT",
-    value: "XX.XX Sec",
+    value: "0:00.26",
   },
   {
     text: "Closed on Time",
-    value: "XX.XX %",
+    value: "99.14%",
   },
   {
     text: "Total Review Time",
-    value: "XX:XX:XX",
+    value: "192:02:20",
   },
   {
     text: "Total Live Moderators",
-    value: "XXX",
+    value: "48",
   },
 ];
 
 const statics2 = [
   {
     text: "Total Breached Items",
-    value: "XX.XX Sec",
+    value: "0",
   },
   {
     text: "# Queues Breached",
-    value: "XX",
+    value: "0",
   },
   {
     text: "Average Queue Aging",
-    value: "XX:XX:XX",
+    value: "0:18:10",
   },
   {
-    text: "XXXXXXX",
-    value: "XXX",
+    text: "Total Daily Throughput",
+    value: "53,180",
   },
 ];
