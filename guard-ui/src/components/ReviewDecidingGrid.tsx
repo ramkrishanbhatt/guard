@@ -30,7 +30,7 @@ function ReviewDecidingGrid({
     <Box
       justifyContent={"center"}
       ml={"15px"}
-      height={"30vh"}
+      height={"31vh"}
       overflow={"hidden"}
 			display={"flex"}
 			flexDirection={"column"}
