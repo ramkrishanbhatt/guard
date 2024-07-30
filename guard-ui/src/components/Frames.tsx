@@ -73,7 +73,7 @@ const Frames = ({
     >
       <ReactPlayer
         ref={playerRef}
-        url={`http://127.0.0.1:8000${url}`}
+        url={`http://3.143.254.4${url}`}
         controls={true}
         width="60%" //change
         height="300px" //change
