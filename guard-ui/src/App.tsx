@@ -9,36 +9,12 @@ import Logo from "./Sutherland_idAvkZdSwO_0.png";
 import { Home, Person } from "@mui/icons-material";
 import QueueDetails from "./components/QueueDetails";
 import Frames from "./components/Frames";
-import { response } from "./components/Data";
+import { classes } from "./components/Data";
 
 function App() {
   const [view, setView] = useState(false);
   const [id, setId] = useState("");
   const [times, setTimes] = useState<number[]>([]);
-
-  const scoresSum: any = {};
-  const counts: any = {};
-
-  // Iterate through each item in the data array
-  response.status.response.output.forEach((item) => {
-    item.classes.forEach((classInfo) => {
-      const className = classInfo.class;
-      const score = classInfo.score;
-      if (scoresSum[className]) {
-        scoresSum[className] += score;
-        counts[className] += 1;
-      } else {
-        scoresSum[className] = score;
-        counts[className] = 1;
-      }
-    });
-  });
-
-  // Calculate the average score for each class
-  const averageScores = Object.keys(scoresSum).map((className) => ({
-    class: className,
-    average_score: scoresSum[className] / counts[className],
-  }));
 
   return (
     <div className="App">
@@ -105,12 +81,11 @@ function App() {
               id={id}
               times={times}
             />
-            {/* <Frames /> */}
           </Box>
         ) : (
           <Box flex={1} p={3} mb={2} height={"inherit"} overflow={"hidden"}>
             <QueueDetails
-              classes={averageScores}
+              classes={classes.filter((_)=>_.include==="Y")}
               onClick={(id: string, times: number[]) => {
                 setView(true);
                 setId(id);
