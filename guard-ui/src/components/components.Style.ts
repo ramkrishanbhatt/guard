@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 export const StyledBoxDisplay = styled(Box)({
     backgroundColor: "#016DD9", 
     borderRadius: "10px",
-    width: "150px",
+    width: "140px",
     //marginRight: "20px",
     marginBottom: "16px"
   });
