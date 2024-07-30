@@ -38,123 +38,13 @@ const QueueDetails = ({
   onClick: any;
   classes: any[];
 }) => {
-  const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState<string>("abc");
-  const [description, setDescription] = useState<string>("abc");
-  const [tags, setTags] = useState<string>("Sports");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
-  const [url, setUrl] = useState("");
   const [videos, setVideos] = useState<any>([]);
   const [selectedTag, setSelectedTag] = useState<string>("");
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-      const myHeaders = new Headers();
-      myHeaders.append(
-        "Authorization",
-        "token AvDdDrOwqrmnP1T5E6tJsHwjrA9qDeth"
-      );
-
-      const formdata = new FormData();
-      formdata.append("media", e.target.files[0], "Boxing.mp4");
-
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-      };
-
-      fetch("https://api.thehive.ai/api/v2/task/sync", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.error(error));
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!file) {
-      setMessage("Please select a file to upload.");
-      return;
-    }
-
-    setIsLoading(true);
-    setMessage("");
-
-    try {
-      const fileName = file.name;
-      const contentType = file.type;
-
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = async () => {
-        const fileContent = reader.result?.toString().split(",")[1]; // get the base64 part
-
-        const response = await fetch(
-          "https://tfqzrdj0ef.execute-api.ap-south-1.amazonaws.com/prod/videos",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              title,
-              description,
-              tags: tags.split(",").map((tag) => tag.trim()),
-              fileContent,
-              fileName,
-              contentType,
-            }),
-          }
-        );
-
-        setIsLoading(false);
-
-        if (response.ok) {
-          const videoData = await response.json();
-          const formdata = new FormData();
-          formdata.append("media", file, "test.mp4");
-
-          const requestOptions = {
-            method: "POST",
-            headers: {
-              Authorization: "token AvDdDrOwqrmnP1T5E6tJsHwjrA9qDeth",
-            },
-            body: formdata,
-          };
-
-          const hiveRes = await fetch(
-            "https://api.thehive.ai/api/v2/task/sync",
-            requestOptions
-          );
-          if (hiveRes.ok) {
-            console.log(hiveRes);
-          }
-          console.log("Video uploaded successfully:", videoData);
-          setUrl(videoData.url.S);
-        } else {
-          const errorData = await response.json();
-          console.error("Error uploading video:", errorData);
-          setMessage(`Error uploading video: ${errorData.error}`);
-        }
-      };
-      reader.onerror = (error) => {
-        console.error("Error reading file:", error);
-        setMessage("Error reading file.");
-        setIsLoading(false);
-      };
-    } catch (error: any) {
-      console.error("Error uploading video:", error);
-      setMessage(`Error uploading video: ${error.message}`);
-      setIsLoading(false);
-    }
-  };
 
   const getVideosByTag = async (tag: string) => {
     setSelectedTag(tag);
     const response = await fetch(
-      `http://127.0.0.1:8000/classify-videos/?tags=${tag}`
+      `http://3.143.254.4/classify-videos/?tags=${tag}`
     );
     if (response.ok) {
       const videosData = await response.json();
