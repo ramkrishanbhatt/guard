@@ -28,12 +28,12 @@ function ReviewDecidingGrid({
 
   return (
     <Box
-      justifyContent={"center"}
+      //justifyContent={"center"}
       ml={"15px"}
       height={"31vh"}
       overflow={"hidden"}
-			display={"flex"}
-			flexDirection={"column"}
+      display={"flex"}
+      flexDirection={"column"}
     >
       <StyledShadowedStack
         sx={{
@@ -43,32 +43,48 @@ function ReviewDecidingGrid({
           alignItems: "center",
           justifyContent: "center",
         }}
-				mb={.5}
+        mb={0.5}
       >
         <StyledMediumTypography alignItems={"center"}>
           {text}
         </StyledMediumTypography>
       </StyledShadowedStack>
-			<Box flex={1} overflow={"auto"}>
-      {data.map((_) => (
-        <StyledShadowedStack
-          sx={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-						py: 0.5,
-						px: 1,
-						boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-          }}
-					mb={.5}
-        >
-          <StyledSmallTypography alignItems={"center"}>
-            {_.class}
-          </StyledSmallTypography>
-          <StyledSmallTypography alignItems={"center"}>
-            {parseFloat((_?.score).toFixed(2))}
-          </StyledSmallTypography>
-        </StyledShadowedStack>
-      ))}</Box>
+      <Stack
+        useFlexGap
+        flexWrap={"wrap"}
+        direction={"row"}
+        spacing={1}
+        overflow={"auto"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        {data.map((_) => (
+          <StyledShadowedStack
+            sx={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              p: 1,
+              boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+              height: "30px",
+              alignItems: "center",
+              bgcolor:
+                text === "High confidence score"
+                  ? "rgb(231, 76, 60)"
+                  : text === "Medium confidence score"
+                  ? "rgb(243, 156, 18)"
+                  : text === "Low confidence score"
+                  ? "rgb(241, 196, 15)"
+                  : "green",
+              color: "white",
+            }}
+            width={"max-content"}
+          >
+            <StyledSmallTypography alignItems={"center"}>
+              {_.class} {`(${parseFloat((_?.score).toFixed(2))})`}
+            </StyledSmallTypography>
+          </StyledShadowedStack>
+        ))}
+      </Stack>
       {/* <Box
         sx={{
           backgroundColor: "#016DD9",
