@@ -260,7 +260,7 @@ const QueueDetails = ({
             </StyledSmallTypography>
             <StyledSmallTypography width={150}>Pin Queue</StyledSmallTypography>
             <StyledSmallTypography width={150}>
-              Live Moderators
+              Duration
             </StyledSmallTypography>
             <StyledSmallTypography width={140}>
               Frames Count
@@ -342,7 +342,7 @@ const QueueDetails = ({
                   <Typography fontSize={"6px"} width={150}>
                     <StarOutline fontSize="small" />
                   </Typography>
-                  <Typography width={150}>10</Typography>
+                  <Typography width={150}>00:25</Typography>
                   <Typography width={150}>{_?.frames?.length}</Typography>
                   <Typography width={150}>
                     {parseFloat(getAverageScore(_?.frames).toFixed(4))}
