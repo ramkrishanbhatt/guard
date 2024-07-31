@@ -68,8 +68,7 @@ async def process_video_endpoint(file: UploadFile = File(...)):
     
     try:
         file_id = await save_video(file)
-        file.filename = file_id
-        # # Construct the relative path to the videos directory
+        # Construct the relative path to the videos directory
         video_url = get_video_url(file_id)
         file.file_path = video_url
         processed_data = await process_video(file)
