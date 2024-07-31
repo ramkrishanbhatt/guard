@@ -615,3 +615,9 @@ export const classes = [
     score: 1.21e-9,
   },
 ];
+
+export function convertToTitleCase(str: string) {
+  const words = str.split('_');
+  const titleCaseStr = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return titleCaseStr;
+}
