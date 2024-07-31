@@ -32,7 +32,10 @@ function App() {
             justifyContent={"space-between"}
             direction={"row"}
           >
-            <img src={Logo} width={"230px"} height={"35px"} />
+            <Stack direction={"row"} alignItems={"center"} spacing={1}>
+              <img src={Logo} width={"230px"} height={"35px"} />
+              <Typography fontSize={"22px"}>DefendR</Typography>{" "}
+            </Stack>
             
             <Typography
               alignItems={"center"}
