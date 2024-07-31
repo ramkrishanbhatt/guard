@@ -75,8 +75,9 @@ const Frames = ({
         ref={playerRef}
         url={`http://3.143.254.4${url}`}
         controls={true}
-        width="60%" //change
-        height="300px" //change
+        width="60%"
+        height="100%"
+        style={{background: "black"}}
         config={{ file: { attributes: { crossOrigin: "anonymous" } } }}
       />
       <canvas
