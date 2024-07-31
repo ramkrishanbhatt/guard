@@ -81,7 +81,7 @@ function ReviewDecidingGrid({
             width={"max-content"}
           >
             <StyledSmallTypography alignItems={"center"}>
-              {convertToTitleCase(_.class)} {`(${parseFloat((_?.score).toFixed(2))})`}
+              {convertToTitleCase(_.class)} {`(${parseFloat((_?.score).toFixed(2))*100}%)`}
             </StyledSmallTypography>
           </StyledShadowedStack>
         ))}
