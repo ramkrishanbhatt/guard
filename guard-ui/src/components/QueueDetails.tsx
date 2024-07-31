@@ -18,6 +18,7 @@ import {
   StyledSmallTypography,
 } from "./components.Style";
 import Wave from "../wave.jpg";
+import { convertToTitleCase } from "./Data";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -194,7 +195,7 @@ const QueueDetails = ({
               }}
             >
               <StyledMediumTypography alignItems={"center"}>
-                Queue Statistics
+                Queue Statics
               </StyledMediumTypography>
             </StyledShadowedStack>
           </Grid>
@@ -303,7 +304,7 @@ const QueueDetails = ({
                   overflow={"hidden"}
                   height={"24px"}
                 >
-                  {_.class}
+                  {convertToTitleCase(_.class)}
                 </StyledSmallTypography>
               </StyledShadowedStack>
             ))}
@@ -336,7 +337,7 @@ const QueueDetails = ({
                     flex={1}
                     display={"flex"}
                   >
-                    {_?.video_id}
+                    {_?.file_data?.filename}
                   </StyledSmallTypography>
                   <Typography fontSize={"6px"} width={150}>
                     <StarOutline fontSize="small" />
@@ -373,60 +374,60 @@ export default QueueDetails;
 const data = [
   {
     text: "Total Volume",
-    value: "265,903",
+    value: "X,XXX,XXX",
     percentage: "XX.XX %",
   },
   {
     text: "AI Moderated Volume",
-    value: "239,313",
-    percentage: "90.00%",
+    value: "X,XXX,XXX",
+    percentage: "XX.XX %",
   },
   {
     text: "Queued Volume",
-    value: "2,955",
-    percentage: "1.00%",
+    value: "X,XXX,XXX",
+    percentage: "XX.XX %",
   },
   {
     text: "Transferred Volume",
-    value: "26,590",
-    percentage: "10.00%",
+    value: "X,XXX,XXX",
+    percentage: "XX.XX %",
   },
 ];
 
 const statics1 = [
   {
     text: "Average AHT",
-    value: "0:00.26",
+    value: "XX.XX Sec",
   },
   {
     text: "Closed on Time",
-    value: "99.14%",
+    value: "XX.XX %",
   },
   {
     text: "Total Review Time",
-    value: "192:02:20",
+    value: "XX:XX:XX",
   },
   {
     text: "Total Live Moderators",
-    value: "48",
+    value: "XXX",
   },
 ];
 
 const statics2 = [
   {
     text: "Total Breached Items",
-    value: "0",
+    value: "XX.XX Sec",
   },
   {
     text: "# Queues Breached",
-    value: "0",
+    value: "XX",
   },
   {
     text: "Average Queue Aging",
-    value: "0:18:10",
+    value: "XX:XX:XX",
   },
   {
-    text: "Total Daily Throughput",
-    value: "53,180",
+    text: "XXXXXXX",
+    value: "XXX",
   },
 ];
