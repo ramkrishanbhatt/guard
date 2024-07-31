@@ -309,7 +309,7 @@ const QueueDetails = ({
               </StyledShadowedStack>
             ))}
           </Grid>
-          <Grid height={"inherit"} overflow={"auto"} pl={1} item md={10}>
+          <Grid height={"inherit"} maxHeight={"45vh"} overflow={"auto"} pl={1} item md={10}>
             {videos.length ? (
               videos.map((_: any) => (
                 <StyledShadowedStack
