@@ -7,6 +7,7 @@ import {
   StyledShadowedStack,
   StyledSmallTypography,
 } from "./components.Style";
+import { convertToTitleCase } from "./Data";
 
 function ReviewDecidingGrid({
   text,
@@ -65,7 +66,7 @@ function ReviewDecidingGrid({
               justifyContent: "space-between",
               p: 1,
               boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-              height: "15px",
+              height: "30px",
               alignItems: "center",
               bgcolor:
                 text === "High confidence score"
@@ -80,7 +81,7 @@ function ReviewDecidingGrid({
             width={"max-content"}
           >
             <StyledSmallTypography alignItems={"center"}>
-              {_.class} {`(${parseFloat((_?.score).toFixed(2))*100}%)`}
+              {convertToTitleCase(_.class)} {`(${parseFloat((_?.score).toFixed(2))})`}
             </StyledSmallTypography>
           </StyledShadowedStack>
         ))}
