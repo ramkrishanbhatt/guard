@@ -1,9 +1,5 @@
-import { Box, Stack, Button, Grid } from "@mui/material";
-import {
-  StyledBoxDisplay,
-  StyledShadowedStack,
-  StyledSmallTypography,
-} from "./components.Style";
+import { Stack, Button, Grid } from "@mui/material";
+import { StyledShadowedStack, StyledSmallTypography } from "./components.Style";
 import Frames from "./Frames";
 import ReviewDecidingGrid from "./ReviewDecidingGrid";
 import { useEffect, useState } from "react";
@@ -18,11 +14,6 @@ const Review = ({
   onClick: any;
   times: number[];
 }) => {
-  const countTime = [
-    { text: "Processed Count", val: "451" },
-    { text: "Review Time", val: "4:23:52" },
-  ];
-
   const [url, setUrl] = useState("");
   const [output, setOutput] = useState<any[]>([]);
   const [data, setData] = useState({
@@ -44,25 +35,21 @@ const Review = ({
 
     res?.classes.forEach((e: any) => {
       const score = e.score;
-      const item = classes.find((_)=>_.class===e.class);
+      const item = classes.find((_) => _.class === e.class);
       if (score < 0.4 && score > 0.01 && item?.include === "Y") {
         filteredData.low = filteredData.low.concat(e);
       } else if (score <= 0.7 && score >= 0.4 && item?.include === "Y") {
         filteredData.medium = filteredData.medium.concat(e);
       } else if (score > 0.7 && item?.include === "Y") {
         filteredData.high = filteredData.high.concat(e);
-      } 
-      // else if (score > 0.8) {
-      //   filteredData.reject = filteredData.reject.concat(e);
-      // }
+      }
     });
+
     setData(() => filteredData);
   };
 
   const getVideoDetails = async () => {
-    const response = await fetch(
-      `http://3.143.254.4/get-processed-data/${id}`
-    );
+    const response = await fetch(`http://3.143.254.4/get-processed-data/${id}`);
     if (response.ok) {
       const videosData = await response.json();
       setUrl(() => videosData.fileData.file_path);
@@ -81,7 +68,7 @@ const Review = ({
       body: JSON.stringify({
         video_id: id,
         status: val,
-        classes: tags
+        classes: tags,
       }),
     });
     if (response.ok) {
@@ -99,57 +86,29 @@ const Review = ({
   }, [output]);
 
   return (
-    <Box bgcolor={"#F1FAFC"} px={3}>
-      <Stack
-        spacing={1}
-        mb={1}
-        direction={"row"}
-        sx={{
-          justifyContent: "flex-end",
-        }}
-      >
-        {countTime.map((_) => (
-          <StyledBoxDisplay p={1} color={"#FFFFFF"} fontWeight={600}>
-            {`${_.text} ${_.val}`}
-          </StyledBoxDisplay>
-        ))}
+    <Stack
+      bgcolor={"#F1FAFC"}
+      display={"flex"}
+      flexDirection={"column"}
+      height={"-webkit-fill-available"}
+      overflow={"hidden"}
+      p={1}
+      spacing={1}
+    >
+      <Stack height={"60vh"}>
+        <Frames url={url} times={times} onClick={getClassesAndScore} />
       </Stack>
-      <Grid container columns={12} spacing={3}>
-        <Grid item md={6} pt={"30px"} height={"60vh"}>
-          <Frames url={url} times={times} onClick={getClassesAndScore} />
+      <Grid
+        container
+        height={"-webkit-fill-available"}
+        overflow={"hidden"}
+        flex={1}
+        columns={12}
+      >
+        <Grid mr={1} height={"inherit"} overflow={"hidden"} item md={7}>
+          <ReviewDecidingGrid data={data} />
         </Grid>
-
-        <Grid item container md={6} spacing={1}>
-          <Grid item md={6}>
-            <ReviewDecidingGrid
-              text="High confidence score"
-              data={data.high}
-              required={false}
-            />
-          </Grid>
-          <Grid item md={6}>
-            <ReviewDecidingGrid
-              text="Medium confidence score"
-              data={data.medium}
-              required={false}
-            />
-          </Grid>
-          <Grid item md={6}>
-            <ReviewDecidingGrid
-              text="Low confidence score"
-              data={data.low}
-              required={false}
-            />
-          </Grid>
-
-        </Grid>
-        <Grid
-          item
-          md={7.2}
-          mt={-1.5}
-          display={"flex"}
-          justifyContent={"flex-start"}
-        >
+        <Grid item md={4.9} display={"flex"} justifyContent={"flex-start"}>
           <StyledShadowedStack
             spacing={1}
             sx={{
@@ -206,8 +165,17 @@ const Review = ({
                   borderRadius: 1,
                   height: "100%",
                   ":hover": { bgcolor: "#405BBA" },
+                  ":disabled": { bgcolor: "lightgray" },
                 }}
-                onClick={()=>approveOrRejectContent("Approved")}
+                disabled={
+                  tags.includes("Hate Speech") ||
+                  tags.includes("Bullying") ||
+                  tags.includes("Personal Information") ||
+                  tags.includes("Nudity") ||
+                  tags.includes("Graphic Violence") ||
+                  tags.includes("Copyright Violations")
+                }
+                onClick={() => approveOrRejectContent("Approved")}
               >
                 Approve
               </Button>
@@ -220,7 +188,7 @@ const Review = ({
                   borderRadius: 1,
                   ":hover": { bgcolor: "#FF0054" },
                 }}
-                onClick={()=>approveOrRejectContent("Rejected")}
+                onClick={() => approveOrRejectContent("Rejected")}
               >
                 Reject
               </Button>
@@ -228,7 +196,7 @@ const Review = ({
           </StyledShadowedStack>
         </Grid>
       </Grid>
-    </Box>
+    </Stack>
   );
 };
 
