@@ -9,6 +9,10 @@ import {
   Typography,
   LinearProgress,
   styled,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { EditOutlined, StarOutline, Upload } from "@mui/icons-material";
 import {
@@ -117,9 +121,9 @@ const QueueDetails = ({
     return sum / data.length;
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getVideosByTag(classes[0].class);
-  },[])
+  }, []);
 
   return (
     <>
@@ -164,9 +168,7 @@ const QueueDetails = ({
           >
             <IconButton component="label" sx={{ alignSelf: "end", p: 0 }}>
               <Upload />
-              <VisuallyHiddenInput
-                type="file"
-              />
+              <VisuallyHiddenInput type="file" />
             </IconButton>
             <StyledShadowedStack
               sx={{
@@ -242,8 +244,23 @@ const QueueDetails = ({
             Live Queuing Details
           </StyledShadowedStack>
         </Grid>
-        <Grid item md={2} marginBottom={1}></Grid>
-        <Grid item md={10} marginBottom={1}>
+        <Grid item md={2.5}>
+            <FormControl sx={{mt: .7}} fullWidth>
+              <InputLabel id="demo-simple-select-label">Class</InputLabel>
+              <Select size="small"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Class"
+                onChange={(e) => {
+                  getVideosByTag(e.target.value as string);
+                }}
+                sx={{background: 'white', alignItems: "flex-start"}}
+              >
+                {classes.map((_) => (<MenuItem value={_.class}>{convertToTitleCase(_.class)}</MenuItem>))}
+              </Select>
+            </FormControl>
+          </Grid>
+        <Grid item md={12} marginBottom={1}>
           <Stack
             color={"gray"}
             fontSize={"12px"}
@@ -259,9 +276,7 @@ const QueueDetails = ({
               Item Details
             </StyledSmallTypography>
             <StyledSmallTypography width={150}>Pin Queue</StyledSmallTypography>
-            <StyledSmallTypography width={150}>
-              Duration
-            </StyledSmallTypography>
+            <StyledSmallTypography width={150}>Duration</StyledSmallTypography>
             <StyledSmallTypography width={140}>
               Frames Count
             </StyledSmallTypography>
@@ -277,39 +292,30 @@ const QueueDetails = ({
           height={"inherit"}
           overflow={"hidden"}
         >
-          <Grid height={"inherit"} overflow={"auto"} p={1} item md={2}>
-            {classes.map((_) => (
-              <StyledShadowedStack
-                mb={1}
-                sx={{
-                  boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-                  ":hover": {
-                    cursor: "pointer",
-                    bgcolor: "#006dd9",
-                    color: "white",
-                  },
-                  bgcolor: selectedTag === _.class ? "#006dd9" : "white",
-                  color: selectedTag === _.class ? "white" : "black",
+          {/* <Grid item md={2}>
+            <FormControl sx={{mt: .7}} fullWidth>
+              <InputLabel id="demo-simple-select-label">Class</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Class"
+                onChange={(e) => {
+                  getVideosByTag(e.target.value as string);
                 }}
-                maxWidth={"-webkit-fill-available"}
-                p={2}
-                onClick={() => {
-                  getVideosByTag(_.class);
-                }}
+                sx={{background: 'white'}}
               >
-                <StyledSmallTypography
-                  maxWidth={"-webkit-fill-available"}
-                  textOverflow={"ellipsis"}
-                  whiteSpace={"nowrap"}
-                  overflow={"hidden"}
-                  height={"24px"}
-                >
-                  {convertToTitleCase(_.class)}
-                </StyledSmallTypography>
-              </StyledShadowedStack>
-            ))}
-          </Grid>
-          <Grid height={"inherit"} maxHeight={"45vh"} overflow={"auto"} pl={1} item md={10}>
+                {classes.map((_) => (<MenuItem value={_.class}>{_.class}</MenuItem>))}
+              </Select>
+            </FormControl>
+          </Grid> */}
+          <Grid
+            height={"inherit"}
+            maxHeight={"45vh"}
+            overflow={"auto"}
+            pl={1}
+            item
+            md={12}
+          >
             {videos.length ? (
               videos.map((_: any) => (
                 <StyledShadowedStack
@@ -325,7 +331,7 @@ const QueueDetails = ({
                   }}
                   maxWidth={"-webkit-fill-available"}
                   onClick={() => {
-                    const times = _?.frames?.map((_:any)=>_?.time)
+                    const times = _?.frames?.map((_: any) => _?.time);
                     onClick(_?.video_id || "", times);
                   }}
                 >
