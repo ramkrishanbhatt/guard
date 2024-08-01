@@ -65,17 +65,18 @@ const Frames = ({
 
   return (
     <StyledShadowedStack
-      width={"100%"}
-      height={"inherit"}
+      width={"auto"}
+      height={"-webkit-fill-available"}
       display={"flex"}
-      sx={{ flexDirection: "row" }}
+      sx={{ flexDirection: "row", p: 1 }}
       overflow={"hidden"}
+
     >
       <ReactPlayer
         ref={playerRef}
         url={`http://3.143.254.4${url}`}
         controls={true}
-        width="60%"
+        width="70%"
         height="100%"
         style={{background: "black"}}
         config={{ file: { attributes: { crossOrigin: "anonymous" } } }}
