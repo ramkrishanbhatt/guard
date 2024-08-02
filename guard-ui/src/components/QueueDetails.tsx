@@ -3,18 +3,14 @@ import {
   Box,
   Stack,
   TextField,
-  Button,
   Grid,
   IconButton,
   Typography,
-  LinearProgress,
   styled,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Autocomplete,
 } from "@mui/material";
-import { EditOutlined, StarOutline, Upload } from "@mui/icons-material";
+import { StarOutline, Upload } from "@mui/icons-material";
 import {
   StyledLargeTypography,
   StyledMediumTypography,
@@ -45,6 +41,7 @@ const QueueDetails = ({
 }) => {
   const [videos, setVideos] = useState<any>([]);
   const [selectedTag, setSelectedTag] = useState<string>("");
+  const [selectedClass, setSelectedClass] = useState<string>(classes[0]);
 
   const getVideosByTag = async (tag: string) => {
     setSelectedTag(tag);
@@ -121,20 +118,22 @@ const QueueDetails = ({
     return sum / data.length;
   };
 
-  const getVideoDetails = async (video_id:string, times: any[]) => {
-    const response = await fetch(`http://3.143.254.4/get-processed-data/${video_id}`);
+  const getVideoDetails = async (
+    video_id: string,
+    times: any[],
+    name: string
+  ) => {
+    const response = await fetch(
+      `http://3.143.254.4/get-processed-data/${video_id}`
+    );
     if (response.ok) {
       const videosData = await response.json();
-      //setUrl(() => videosData.fileData.file_path);
-      onClick(video_id || "", times, videosData.fileData.file_path);
-    } 
-    // else {
-    //   setUrl("");
-    // }
+      onClick(video_id || "", times, videosData.fileData.file_path, name);
+    }
   };
 
   useEffect(() => {
-    getVideosByTag(classes[0].class);
+    getVideosByTag(classes[0]);
   }, []);
 
   return (
@@ -257,21 +256,22 @@ const QueueDetails = ({
           </StyledShadowedStack>
         </Grid>
         <Grid item md={2.5}>
-            <FormControl sx={{mt: .7}} fullWidth>
-              <InputLabel id="demo-simple-select-label">Class</InputLabel>
-              <Select size="medium"
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Class"
-                onChange={(e) => {
-                  getVideosByTag(e.target.value as string);
-                }}
-                sx={{background: 'white', alignItems: "flex-start"}}
-              >
-                {classes.map((_) => (<MenuItem value={_.class}>{convertToTitleCase(_.class)}</MenuItem>))}
-              </Select>
-            </FormControl>
-          </Grid>
+          <FormControl sx={{ mt: 0.7 }} fullWidth>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              getOptionLabel={(o) => convertToTitleCase(o)}
+              options={classes}
+              sx={{ width: 300 }}
+              onChange={(event: any, newValue: string | null) => {
+                setSelectedClass(newValue || "");
+                getVideosByTag(newValue || ("" as string));
+              }}
+              value={selectedClass}
+              renderInput={(params) => <TextField {...params} label="Class" />}
+            />
+          </FormControl>
+        </Grid>
         <Grid item md={12} marginBottom={1}>
           <Stack
             color={"gray"}
@@ -304,22 +304,6 @@ const QueueDetails = ({
           height={"inherit"}
           overflow={"hidden"}
         >
-          {/* <Grid item md={2}>
-            <FormControl sx={{mt: .7}} fullWidth>
-              <InputLabel id="demo-simple-select-label">Class</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Class"
-                onChange={(e) => {
-                  getVideosByTag(e.target.value as string);
-                }}
-                sx={{background: 'white'}}
-              >
-                {classes.map((_) => (<MenuItem value={_.class}>{_.class}</MenuItem>))}
-              </Select>
-            </FormControl>
-          </Grid> */}
           <Grid
             height={"inherit"}
             maxHeight={"45vh"}
@@ -344,7 +328,7 @@ const QueueDetails = ({
                   maxWidth={"-webkit-fill-available"}
                   onClick={() => {
                     const times = _?.frames?.map((_: any) => _?.time);
-                    getVideoDetails(_?.video_id, times);
+                    getVideoDetails(_?.video_id, times, _?.file_data?.filename);
                   }}
                 >
                   <StyledSmallTypography

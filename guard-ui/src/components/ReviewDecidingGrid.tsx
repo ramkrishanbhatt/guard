@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
 import { StyledShadowedStack, StyledSmallTypography } from "./components.Style";
 import { convertToTitleCase } from "./Data";
 
@@ -10,6 +10,7 @@ function ReviewDecidingGrid({ data }: { data: any }) {
       display={"flex"}
       flexDirection={"column"}
       width={"-webkit-fill-available"}
+      border={"2px solid #006dd9"}
     >
       <Stack
         width={"100%"}
@@ -22,64 +23,28 @@ function ReviewDecidingGrid({ data }: { data: any }) {
         justifyContent={"center"}
       >
         {data.high.map((_: any) => (
-          <StyledShadowedStack
-            sx={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              p: 1,
-              boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-              height: "30px",
-              alignItems: "center",
-              bgcolor: "rgb(231, 76, 60)",
-              color: "white",
-            }}
-            width={"max-content"}
-          >
-            <StyledSmallTypography alignItems={"center"}>
-              {convertToTitleCase(_.class)}{" "}
-              {`(${parseFloat((_?.score).toFixed(2)) * 100}%)`}
-            </StyledSmallTypography>
-          </StyledShadowedStack>
+          <Chip
+            sx={{ bgcolor: "rgb(231, 76, 60)", color: "white" }}
+            label={`${convertToTitleCase(_.class)} (${
+              parseFloat((_?.score).toFixed(2)) * 100
+            }%)`}
+          />
         ))}
         {data.medium.map((_: any) => (
-          <StyledShadowedStack
-            sx={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              p: 1,
-              boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-              height: "30px",
-              alignItems: "center",
-              bgcolor: "rgb(243, 156, 18)",
-              color: "white",
-            }}
-            width={"max-content"}
-          >
-            <StyledSmallTypography alignItems={"center"}>
-              {convertToTitleCase(_.class)}{" "}
-              {`(${parseFloat((_?.score).toFixed(2)) * 100}%)`}
-            </StyledSmallTypography>
-          </StyledShadowedStack>
+          <Chip
+            sx={{ bgcolor: "rgb(243, 156, 18)", color: "white" }}
+            label={`${convertToTitleCase(_.class)} (${
+              parseFloat((_?.score).toFixed(2)) * 100
+            }%)`}
+          />
         ))}
         {data.low.map((_: any) => (
-          <StyledShadowedStack
-            sx={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              p: 1,
-              boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-              height: "30px",
-              alignItems: "center",
-              bgcolor: "rgb(241, 196, 15)",
-              color: "white",
-            }}
-            width={"max-content"}
-          >
-            <StyledSmallTypography alignItems={"center"}>
-              {convertToTitleCase(_.class)}{" "}
-              {`(${parseFloat((_?.score).toFixed(2)) * 100}%)`}
-            </StyledSmallTypography>
-          </StyledShadowedStack>
+          <Chip
+            sx={{ bgcolor: "rgb(241, 196, 15)", color: "white" }}
+            label={`${convertToTitleCase(_.class)} (${
+              parseFloat((_?.score).toFixed(2)) * 100
+            }%)`}
+          />
         ))}
       </Stack>
     </StyledShadowedStack>

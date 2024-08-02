@@ -41,10 +41,16 @@ const Frames = ({
   useEffect(() => {
     const captureFrames = async () => {
       if (playerRef.current) {
+        const player = playerRef.current.getInternalPlayer() as HTMLVideoElement;
+        // Set canvas dimensions to match video dimensions
+        if (canvasRef.current) {
+          canvasRef.current.width = 500;
+          canvasRef.current.height = 300;
+        }
         const capturedFrames: string[] = [];
         for (let i = 0; i < timestamps.length; i++) {
           await setVideoTime(timestamps[i]);
-          const frame = captureFrame();
+          const frame = captureFrame(timestamps[i]);
           if (frame) {
             capturedFrames.push(frame);
           }
@@ -82,7 +88,7 @@ const Frames = ({
     });
   };
 
-  const captureFrame = (): string | null => {
+  const captureFrame = (time: any): string | null => {
     if (playerRef.current && canvasRef.current) {
       const player = playerRef.current.getInternalPlayer() as HTMLVideoElement;
       const canvas = canvasRef.current;
@@ -90,6 +96,9 @@ const Frames = ({
       if (context) {
         console.log(`Capturing frame at time ${player.currentTime}`);
         context.drawImage(player, 0, 0, canvas.width, canvas.height);
+        context.font = "bold 30px Arial";
+        context.fillStyle = "white";
+        context.fillText(`Time: ${time.toFixed(2)}s`, 10, canvas.height - 20);
         return canvas.toDataURL("image/png");
       }
     }
@@ -109,11 +118,12 @@ const Frames = ({
 
   return (
     <StyledShadowedStack
-      width={"auto"}
+      width={"inherit"}
       height={"-webkit-fill-available"}
       display={"flex"}
       sx={{ flexDirection: "row", p: 1 }}
       overflow={"hidden"}
+      border={"2px solid #006dd9"}
     >
       {!videoBlobUrl ? (
         <Box
@@ -132,7 +142,7 @@ const Frames = ({
             ref={playerRef}
             url={videoBlobUrl}
             controls={true}
-            width="70%"
+            width="82%"
             height="100%"
             style={{ background: "black" }}
             config={{ file: { attributes: { crossOrigin: "anonymous" } } }}
@@ -162,13 +172,14 @@ const Frames = ({
               useFlexGap
               flexWrap={"wrap"}
               direction={"row"}
-              width={"50%"}
+              width={"18%"}
               spacing={1}
               overflow={"auto"}
               maxHeight={"-webkit-fill-available"}
               ml={1}
               alignItems={"center"}
               justifyContent={"center"}
+              zIndex={1}
             >
               {frames.map((frame, index) => (
                 <StyledShadowedStack
@@ -176,12 +187,14 @@ const Frames = ({
                   sx={{
                     p: 0,
                     borderRadius: 0,
-                    ":hover": { cursor: "pointer" },
+                    ":hover": { cursor: "pointer", transform: "scale(1.39)", zIndex: 1000 },
                     height: "max-content",
+                    transition: "transform 0.3s ease",
                   }}
                   border={
                     index === selectedFrame ? "3px solid #006dd9" : "none"
                   }
+                  width={"70%"}
                 >
                   <img
                     onClick={() => {
@@ -197,7 +210,7 @@ const Frames = ({
                     key={index}
                     src={frame}
                     alt={`Frame ${index}`}
-                    width={"80px"}
+                    width={"100%"}
                   />
                 </StyledShadowedStack>
               ))}

@@ -1,5 +1,5 @@
 import { Stack, Button, Grid } from "@mui/material";
-import { StyledShadowedStack, StyledSmallTypography } from "./components.Style";
+import { StyledMediumTypography, StyledShadowedStack, StyledSmallTypography } from "./components.Style";
 import Frames from "./Frames";
 import ReviewDecidingGrid from "./ReviewDecidingGrid";
 import { useEffect, useState } from "react";
@@ -10,11 +10,13 @@ const Review = ({
   onClick,
   times,
   url,
+  fileName,
 }: {
   id: string;
   onClick: any;
   times: number[];
   url: string;
+  fileName: string;
 }) => {
   //const [url, setUrl] = useState("");
   const [output, setOutput] = useState<any[]>([]);
@@ -94,45 +96,48 @@ const Review = ({
       display={"flex"}
       flexDirection={"column"}
       height={"-webkit-fill-available"}
-      overflow={"hidden"}
+      overflow={"auto"}
       p={1}
       spacing={1}
     >
-      <Stack height={"60vh"}>
+      <Stack height={"55vh"} width={"-webkit-fill-available"} flex={1} spacing={.5} justifyContent={"start"} alignItems={"flex-start"}>
+        <StyledSmallTypography pl={2} color={"#006dd9"}>{fileName}</StyledSmallTypography>
         <Frames url={url} times={times} onClick={getClassesAndScore} />
       </Stack>
       <Grid
         container
-        height={"-webkit-fill-available"}
-        overflow={"hidden"}
-        flex={1}
+        rowSpacing={1}
         columns={12}
       >
-        <Grid mr={1} height={"inherit"} overflow={"hidden"} item md={7}>
+        <Grid  item md={12}>
           <ReviewDecidingGrid data={data} />
         </Grid>
-        <Grid item md={4.9} display={"flex"} justifyContent={"flex-start"}>
+        <Grid item md={12} display={"flex"} justifyContent={"flex-start"}>
           <StyledShadowedStack
             spacing={1}
             sx={{
               display: "flex",
               justifyContent: "space-between",
               flexDirection: "row",
+              alignItems: "center",
+              p: 1,
+              border: "2px solid #006dd9"
             }}
+            width={"100%"}
           >
             <Stack
-              width={"fit-content"}
+              //width={"fit-content"}
               spacing={1}
               direction="row"
-              useFlexGap
-              flexWrap="wrap"
+              // useFlexGap
+              // flexWrap="wrap"
             >
               {queueData.map((_) => (
                 <StyledShadowedStack
-                  width={"130px"}
+                  //width={"130px"}
                   sx={{
-                    py: 0.5,
-                    px: 1,
+                    //py: 0.5,
+                    //px: 1,
                     borderRadius: 1,
                     boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
                     ":hover": {
@@ -140,6 +145,7 @@ const Review = ({
                       bgcolor: "#006dd9",
                       color: "white",
                     },
+                    maxHeight: "30.75px",
                     bgcolor: tags.includes(_) ? "#006dd9" : "white",
                     color: tags.includes(_) ? "white" : "black",
                   }}
@@ -159,14 +165,13 @@ const Review = ({
               ))}
             </Stack>
             <Stack mt={0} direction={"row"} spacing={1}>
-              <Button
+              <Button size="small"
                 sx={{
                   backgroundColor: "#405BBA",
                   color: "#FFFFFF",
-                  padding: "10px",
+                  //padding: "4px",
                   fontWeight: 500,
                   borderRadius: 1,
-                  height: "100%",
                   ":hover": { bgcolor: "#405BBA" },
                   ":disabled": { bgcolor: "lightgray" },
                 }}
@@ -182,13 +187,14 @@ const Review = ({
               >
                 Approve
               </Button>
-              <Button
+              <Button size="small"
                 sx={{
                   backgroundColor: "#FF0054",
                   color: "#FFFFFF",
-                  padding: "10px",
+                  //padding: "4px",
                   fontWeight: 500,
                   borderRadius: 1,
+                  //height: "max-content",
                   ":hover": { bgcolor: "#FF0054" },
                 }}
                 onClick={() => approveOrRejectContent("Rejected")}
