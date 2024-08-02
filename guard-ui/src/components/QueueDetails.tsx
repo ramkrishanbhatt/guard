@@ -121,6 +121,18 @@ const QueueDetails = ({
     return sum / data.length;
   };
 
+  const getVideoDetails = async (video_id:string, times: any[]) => {
+    const response = await fetch(`http://3.143.254.4/get-processed-data/${video_id}`);
+    if (response.ok) {
+      const videosData = await response.json();
+      //setUrl(() => videosData.fileData.file_path);
+      onClick(video_id || "", times, videosData.fileData.file_path);
+    } 
+    // else {
+    //   setUrl("");
+    // }
+  };
+
   useEffect(() => {
     getVideosByTag(classes[0].class);
   }, []);
@@ -247,7 +259,7 @@ const QueueDetails = ({
         <Grid item md={2.5}>
             <FormControl sx={{mt: .7}} fullWidth>
               <InputLabel id="demo-simple-select-label">Class</InputLabel>
-              <Select size="small"
+              <Select size="medium"
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Class"
@@ -332,7 +344,7 @@ const QueueDetails = ({
                   maxWidth={"-webkit-fill-available"}
                   onClick={() => {
                     const times = _?.frames?.map((_: any) => _?.time);
-                    onClick(_?.video_id || "", times);
+                    getVideoDetails(_?.video_id, times);
                   }}
                 >
                   <StyledSmallTypography

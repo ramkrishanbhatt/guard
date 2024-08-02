@@ -9,12 +9,14 @@ const Review = ({
   id,
   onClick,
   times,
+  url,
 }: {
   id: string;
   onClick: any;
   times: number[];
+  url: string;
 }) => {
-  const [url, setUrl] = useState("");
+  //const [url, setUrl] = useState("");
   const [output, setOutput] = useState<any[]>([]);
   const [data, setData] = useState({
     low: [],
@@ -52,11 +54,12 @@ const Review = ({
     const response = await fetch(`http://3.143.254.4/get-processed-data/${id}`);
     if (response.ok) {
       const videosData = await response.json();
-      setUrl(() => videosData.fileData.file_path);
+      //setUrl(() => videosData.fileData.file_path);
       setOutput(() => videosData.hiveResponse.status[0].response.output);
-    } else {
-      setUrl("");
-    }
+    } 
+    // else {
+    //   setUrl("");
+    // }
   };
 
   const approveOrRejectContent = async (val: string) => {

@@ -15,7 +15,9 @@ origins = [
 "http://localhost",
 "http://localhost:8000",
 "http://localhost:80",
-"http://localhost:3000"
+"http://localhost:3000",
+"http://shieldr.s3.us-east-2.amazonaws.com",
+"http://shieldr.s3.us-east-2.amazonaws.com/"
     # Add more origins as needed
 ]
 

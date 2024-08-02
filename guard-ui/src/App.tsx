@@ -12,6 +12,7 @@ function App() {
   const [view, setView] = useState(false);
   const [id, setId] = useState("");
   const [times, setTimes] = useState<number[]>([]);
+  const [url, setUrl] = useState("");
 
   const countTime = [
     { text: "Processed Count", val: "451" },
@@ -84,7 +85,7 @@ function App() {
                 Moderator Monitoring
               </Box>
             </Stack>
-            <Stack
+            {view && <Stack
               spacing={1}
               mb={1}
               direction={"row"}
@@ -97,7 +98,7 @@ function App() {
                   {`${_.text} ${_.val}`}
                 </StyledBoxDisplay>
               ))}
-            </Stack>
+            </Stack>}
           </Stack>
         </Box>
         {view ? (
@@ -108,16 +109,26 @@ function App() {
               }}
               id={id}
               times={times}
+              url={url}
             />
           </Box>
         ) : (
-          <Box flex={1} p={3} mb={2} height={"inherit"} overflow={"hidden"}>
+          <Box
+            flex={1}
+            display={"flex"}
+            flexDirection={"column"}
+            p={3}
+            mb={2}
+            height={"-webkit-fill-available"}
+            overflow={"hidden"}
+          >
             <QueueDetails
               classes={classes.filter((_) => _.include === "Y")}
-              onClick={(id: string, times: number[]) => {
+              onClick={(id: string, times: number[], url: string) => {
                 setView(true);
                 setId(id);
                 setTimes(() => times);
+                setUrl(url);
               }}
             />
           </Box>
