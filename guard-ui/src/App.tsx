@@ -38,7 +38,12 @@ function App() {
           >
             <Stack direction={"row"} alignItems={"center"} spacing={1}>
               <img src={Logo} width={"230px"} height={"35px"} />
-              <Typography fontSize={"22px"}>DefendR</Typography>{" "}
+              <Typography  
+                color={"#26235D"} 
+                fontWeight={"600"} 
+                fontSize={"22px"}>
+                  D<span style={{color: "#DE1B54"}}>e</span>f<span style={{color: "#DE1B54"}}>ɘ</span>ndR
+              </Typography>{" "}
             </Stack>
 
             <Typography
